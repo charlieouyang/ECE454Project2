@@ -29,6 +29,26 @@ public class FileManager {
 		return versionMap;
 	}
 	
+	public HashMap<String, Lock> getLockMap() {
+		return lockMap;
+	}
+	
+	public void setLock(String fileName, Lock lock) {
+		lockMap.put(fileName, lock);
+	}
+	
+	/**
+	 * Returns type of lock on file. If null, no lock on file.
+	 * @param fileName
+	 * @return lock type
+	 */
+	public Lock getLockType(String fileName) {
+		if (lockMap.containsKey(fileName))
+			return lockMap.get(fileName);
+		
+		return null;
+	}
+	
 	public void addLocalFile(String fileName) {
 		localFiles.add(fileName);
 		ArrayList<Integer> bitString = new ArrayList<Integer>(1);
