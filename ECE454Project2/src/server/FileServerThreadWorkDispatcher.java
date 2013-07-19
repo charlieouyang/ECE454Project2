@@ -39,27 +39,27 @@ public class FileServerThreadWorkDispatcher extends Thread {
 					break;
 				}
 				
-//				// Decipher to see what the client wants
-//				if (incomingMessage != null) {
-//					Message returnMessage = ServerDecipherMessageRepo
-//							.DecipherMessageAndReturn(incomingMessage);
-//
-//					if (returnMessage != null) {
-//						String ipAddress = incomingMessage.getIpAddress();
-//						int portNumber = incomingMessage.getPortNumber();
-//
-//						// Send back a response
-//						// FileServerThreadSendMessage sendMessageThread = new
-//						// FileServerThreadSendMessage(ipAddress, portNumber,
-//						// returnMessage);
-//						// sendMessageThread.start();
-//
-//					} else {
-//						// No message to return
-//					}
-//				} else {
-//					// do nothing
-//				}
+				// Decipher to see what the client wants
+				if (incomingMessage != null) {
+					Message returnMessage = ServerDecipherMessageRepo
+							.DecipherMessageAndReturn(incomingMessage);
+
+					if (returnMessage != null) {
+						String ipAddress = incomingMessage.getIpAddress();
+						int portNumber = incomingMessage.getPortNumber();
+
+						// Send back a response
+						// FileServerThreadSendMessage sendMessageThread = new
+						// FileServerThreadSendMessage(ipAddress, portNumber,
+						// returnMessage);
+						// sendMessageThread.start();
+
+					} else {
+						// No message to return
+					}
+				} else {
+					// do nothing
+				}
 
 			}
 			

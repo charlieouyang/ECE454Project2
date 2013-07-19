@@ -1,6 +1,8 @@
 package data;
 
-public class FileWrapper {
+import java.io.Serializable;
+
+public class FileWrapper implements Serializable{
 	private String fileName;
 	private byte[] content;
 	
