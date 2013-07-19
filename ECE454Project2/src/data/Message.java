@@ -5,11 +5,7 @@ import java.io.Serializable;
 public class Message implements Serializable {
 	
 	public enum MESSAGE_TYPE {
-		PEER_DISCOVER, 				// BROADCAST
-		ACK_PEER_DISCOVER,
-		PEER_LEAVING, 				// BROADCAST
-		CHUNK_REQUEST,
-		CHUNK_RESPONSE,
+		PEER_LEAVING, 
 		STATUS_UPDATE,
 		TEST
 	}
