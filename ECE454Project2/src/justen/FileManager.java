@@ -8,11 +8,13 @@ public class FileManager {
 	private HashSet<String> localFiles;
 	private HashSet<String> remoteFiles;
 	private HashMap<String, ArrayList<Integer>> versionMap;
+	private HashMap<String, Lock> lockMap;
 	
 	public FileManager() {
 		localFiles = new HashSet<String>();
 		remoteFiles = new HashSet<String>();
 		versionMap = new HashMap<String, ArrayList<Integer>>();
+		lockMap = new HashMap<String, Lock>();
 	}
 	
 	public HashSet<String> getLocalFiles() {
@@ -34,9 +36,27 @@ public class FileManager {
 		versionMap.put(fileName, bitString);
 	}
 	
-	public void processStatusUpdate(HashMap<String, Integer> map) {
+	public void processStatusUpdate(HashMap<String, ArrayList<Integer>> map) {
 		for (String file : map.keySet()) {
-			
+			if (localFiles.contains(file) || remoteFiles.contains(file)) {
+				// we have the file, check versions
+				ArrayList<Integer> remoteBitString = map.get(file);
+				ArrayList<Integer> localBitString = versionMap.get(file);
+				if (remoteBitString.size() > localBitString.size()) {
+					// new version
+					int j = localBitString.size();
+					localBitString.ensureCapacity(remoteBitString.size());
+					for (int i = j; i < localBitString.size(); i++) {
+						localBitString.set(i, 0);
+					}
+					versionMap.put(file, localBitString);
+				}
+			}
+			else
+			{
+				remoteFiles.add(file);
+				versionMap.put(file, map.get(file));
+			}
 		}
 	}	
 	
