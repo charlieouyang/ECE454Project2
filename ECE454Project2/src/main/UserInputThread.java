@@ -23,11 +23,7 @@ public class UserInputThread extends Thread {
 				
 				if (input.equals("leave")) {
 					if (PropertiesOfPeer.peerUp) {
-						// Shutdown the server!
-						//CloseThisConnectionThread closePeerThread = new CloseThisConnectionThread();
-						//closePeerThread.start();
 						PropertiesOfPeer.peerUp = false;
-						//fileServerThread.stopTheThread();
 					} else {
 						System.out.println("[** SYSTEM NOTIFICATION **]	System is already shutdown");
 					}
@@ -49,40 +45,11 @@ public class UserInputThread extends Thread {
 					} else {
 						System.out.println("[** SYSTEM NOTIFICATION **]	System is already up");
 					}
-				}
-				
-				
-				
-//				else if (input.equals("insert")){
-//					System.out.println("[** KEYBOARD INPUT **]	Please enter full file name");
-//					String fileName = scanner.next(); 
-//					
-//					if (fileName.equals("end")){
-//						continue;
-//					}
-//					PropertiesOfPeer.peerConcurrencyManager.insertFile(fileName);
-//					PropertiesOfPeer.updateCurrentPeerStatus();
-//					if (PropertiesOfPeer.peerUp) {
-//						PropertiesOfPeer.broadcastStatus();
-//						// Refresh and broadcast status
-//					}
-//				}
-//				else if (input.equals("query")) {
-//					PropertiesOfPeer.printStatusInformation();
-//				}
-				
-				
-				
-				
+				}	
 			}
 		} catch (Exception e) {
 			System.err.println("User console error");
-			e.printStackTrace();
-			System.exit(-1);
 		}
 	}
 	
-	public void InitializeSystem(){
-		
-	}
 }
