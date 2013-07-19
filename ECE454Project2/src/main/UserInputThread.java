@@ -1,9 +1,17 @@
 package main;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.util.Iterator;
 import java.util.Scanner;
+import java.util.Map.Entry;
 
+import client.ClientStateManager;
 import client.ConnectionDispatcher;
 
+import data.FileWrapper;
+import data.Message;
+import data.Message.MESSAGE_TYPE;
 import data.PropertiesOfPeer;
 import server.FileServer;
 
@@ -45,7 +53,26 @@ public class UserInputThread extends Thread {
 					} else {
 						System.out.println("[** SYSTEM NOTIFICATION **]	System is already up");
 					}
-				}	
+				}
+				
+				else if (input.equals("send")){
+					if (PropertiesOfPeer.peerUp) {
+						Iterator<Entry> it = PropertiesOfPeer.ipAddrPortNumMappingAlive.iterator();
+						while (it.hasNext()) {
+							Entry entry = it.next();
+							File file = new File("C:\\test1.pdf");
+							byte[] content = Files.readAllBytes(file.toPath());
+							
+							FileWrapper fileWrapper = new FileWrapper(file.getName(), content);
+							
+							Message fileMessage = new Message ((String)entry.getKey(), (Integer)entry.getValue(), MESSAGE_TYPE.FILE, fileWrapper);
+							ClientStateManager.AddNewMessageToQueue((String)entry.getKey() + (Integer)entry.getValue(), fileMessage);
+						}
+						
+					} else {
+						System.out.println("[** SYSTEM NOTIFICATION **]	System is shut down");
+					}
+				}
 			}
 		} catch (Exception e) {
 			System.err.println("User console error");

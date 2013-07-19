@@ -7,6 +7,7 @@ public class Message implements Serializable {
 	public enum MESSAGE_TYPE {
 		PEER_LEAVING, 
 		STATUS_UPDATE,
+		FILE,
 		TEST
 	}
 	

@@ -15,19 +15,13 @@ public class FileServerThreadWorkDispatcher extends Thread {
 		this.socket = socket;
     }
 
-    //This thread will do 2 things
-    //1) Sending out list of files when requested
-    //2) Sending requested files
     @Override
 	public void run() {
 
 		try {
-		    
 			//Take client input and see what they want
 			ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());		
 			boolean connectionUp = true;
-			
-			
 			
 			while (connectionUp) {
 				connectionUp = PropertiesOfPeer.peerUp;
@@ -68,8 +62,6 @@ public class FileServerThreadWorkDispatcher extends Thread {
 //				}
 
 			}
-			
-			
 			
 			//Only after other peer goes offline
 			objectInputStream.close();
