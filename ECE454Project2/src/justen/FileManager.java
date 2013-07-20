@@ -33,6 +33,7 @@ public class FileManager {
 		return lockMap;
 	}
 	
+	// filename contains version num
 	public void setLock(String fileName, Lock lock) {
 		lockMap.put(fileName, lock);
 	}
@@ -56,7 +57,7 @@ public class FileManager {
 		versionMap.put(fileName, bitString);
 	}
 	
-	public void processStatusUpdate(HashMap<String, ArrayList<Integer>> map) {
+	public void processVersionMap(HashMap<String, ArrayList<Integer>> map) {
 		for (String file : map.keySet()) {
 			if (localFiles.contains(file) || remoteFiles.contains(file)) {
 				// we have the file, check versions
@@ -78,7 +79,7 @@ public class FileManager {
 				versionMap.put(file, map.get(file));
 			}
 		}
-	}	
+	}
 	
 	public boolean addLocalFileVersion(String fileName, int versionNum) {
 		if (!versionMap.containsKey(fileName))
@@ -92,6 +93,27 @@ public class FileManager {
 		versionMap.put(fileName, temp);
 		
 		return true;
+	}
+	
+	public boolean removeLocalFile(String fileName, boolean allVersions) {
+		if (!localFiles.contains(fileName))
+			return false;
+		if (allVersions) {
+			localFiles.remove(fileName);
+			for (int i = 0; i < versionMap.get(fileName).size(); i++) {
+				versionMap.get(fileName).set(i, 0);
+			}
+			return true;
+		}
+		else {
+			//fileName = justen_stable_v1.docx
+			int v = fileName.lastIndexOf("_") + 2; // 13
+			String vNum = fileName.substring(v, fileName.lastIndexOf("."));
+			int versionNumber = Integer.parseInt(vNum);
+			if (versionMap.get(fileName).size() >= versionNumber)
+				versionMap.get(fileName).set(versionNumber, 0);
+			return true;
+		}
 	}
 	
 	public void addRemoteFile(String fileName) {
@@ -112,5 +134,5 @@ public class FileManager {
 	
 	public boolean containsFileRemotely(String filename) {
 		return remoteFiles.contains(filename);
-	}	
+	}
 }
