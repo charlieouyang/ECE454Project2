@@ -16,6 +16,15 @@ public class Peer {
 		
 		UserInputThread userInputThread = new UserInputThread();
 		userInputThread.start();
+		
+		//Still need to do...
+		/*
+		 * 1) Create a file
+		 * 2) Read in a file/write to a file
+		 * 3) Delete a file
+		 * 4) Tagging... that's all you Pinto
+		 * 5) Changing a file locally (From navigating to the folder and changing a file) will update the system
+		 */
 	}
 	
 	
