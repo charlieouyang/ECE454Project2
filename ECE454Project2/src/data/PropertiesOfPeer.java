@@ -15,32 +15,7 @@ public class PropertiesOfPeer {
 	public static ArrayList<Entry> ipAddrPortNumMappingAlive = new ArrayList<Entry>();
 	public static boolean peerUp = false;
 	
-	//File management and synchronization stuff
-	//public static ConcurrencyManager peerConcurrencyManager;
-	//public static Status currentPeerStatus;
-	//public static Hashtable<String, Status> listOfOtherPeersStatus;		//PeerName mapped to status
-	ArrayList<String> listOfCompleteFiles;
-	ArrayList<String> listOfIncompleteFiles;
-	ArrayList<String> listOfChunks;
-	
-	//Chunk sending managment and stuff
-	//public static Hashtable<String, TorrentMetaData> listOfFilesToGet;
-	//public static ArrayList<String> fileListAlreadyGetting;
-	//public static Hashtable<String, TorrentMetaData> inProcessOfGettingChunks;
-	
 	public PropertiesOfPeer(){
-		//Stuff to keep track of files/chunks and other peers
-		//peerConcurrencyManager = new ConcurrencyManager(PeerName);
-		//currentPeerStatus = new Status(peerConcurrencyManager);
-		//listOfOtherPeersStatus = new Hashtable<String, Status>();
-		
-		//listOfCompleteFiles = new ArrayList<String>();
-		//listOfIncompleteFiles = new ArrayList<String>();
-		//listOfChunks = new ArrayList<String>();
-		//listOfFilesToGet = new Hashtable<String, TorrentMetaData>();		
-		//fileListAlreadyGetting = new ArrayList<String>();
-		//inProcessOfGettingChunks = new Hashtable<String, TorrentMetaData>();
-		
 		//List of ip address to port number mappings
 		Map.Entry<String, Integer> entry1 = new MyEntry<String, Integer>("localhost", 1000);
 		ipAddrPortNumMappingAll.add(entry1);
