@@ -62,8 +62,8 @@ public class ConnectionInstance extends Thread {
 					//As long as the other server is still listening
 					if (PropertiesOfPeer.CheckIfThisHostIsStillAlive(ipAddress, portNumber)){
 						//When we determine there's a new message that this peer needs to send to another peer
-						if (ClientStateManager.NewMessageToSendForPeer(ipAddress + Integer.toString(portNumber))){
-							Message sendingMessage = ClientStateManager.RetrieveMessageForPeer(ipAddress + Integer.toString(portNumber));
+						if (ClientStateManager.NewMessageToSendForPeer(ipAddress + ":" + Integer.toString(portNumber))){
+							Message sendingMessage = ClientStateManager.RetrieveMessageForPeer(ipAddress + ":" +  Integer.toString(portNumber));
 							oos.writeObject(sendingMessage);
 						}
 					}

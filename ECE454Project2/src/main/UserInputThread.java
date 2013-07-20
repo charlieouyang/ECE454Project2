@@ -55,18 +55,14 @@ public class UserInputThread extends Thread {
 					}
 				}
 				
-				else if (input.equals("send")){
+				else if (input.equals("request")){
 					if (PropertiesOfPeer.peerUp) {
 						Iterator<Entry> it = PropertiesOfPeer.ipAddrPortNumMappingAlive.iterator();
 						while (it.hasNext()) {
 							Entry entry = it.next();
-							File file = new File("C:\\test1.pdf");
-							byte[] content = Files.readAllBytes(file.toPath());
 							
-							FileWrapper fileWrapper = new FileWrapper(file.getName(), content);
-							
-							Message fileMessage = new Message ((String)entry.getKey(), (Integer)entry.getValue(), MESSAGE_TYPE.FILE, fileWrapper);
-							ClientStateManager.AddNewMessageToQueue((String)entry.getKey() + (Integer)entry.getValue(), fileMessage);
+							ClientStateManager.GetFileFromOtherPeer((String)entry.getKey() + ":" + 
+									Integer.toString((Integer)entry.getValue()), "test1.pdf");
 						}
 						
 					} else {
