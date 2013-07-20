@@ -1,9 +1,10 @@
 package justen;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Map.Entry;
 
 import client.ClientStateManager;
-
 import data.PropertiesOfPeer;
 
 public class FileOperations 
@@ -69,7 +70,20 @@ public class FileOperations
 		return closeFile(fileName);
 	}
 	
-	public int read(String fileName, char[] buf, int offset, int bufsize) {
+	public int create(String fileName) { //charlie.docx
+		if (fm.fileExists(fileName))
+			return -1;
+		
+		String properName = fileName.substring(0, fileName.indexOf("."));
+		String extension = fileName.substring(fileName.indexOf(".") + 1);
+		File file = new File(properName + "_v1" + extension);
+		try {
+			file.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return -1;
+		}
+		PropertiesOfPeer.broadcastStatus();
 		return 0;
 	}
 	
@@ -83,9 +97,13 @@ public class FileOperations
 				PropertiesOfPeer.broadcastStatus();
 			}
 			else if (fm.getLockMap().get(fileName) instanceof WriterLock) {
+				int v = fileName.lastIndexOf("_") + 2; 
+				String vNum = fileName.substring(v, fileName.lastIndexOf("."));
+				int versionNumber = Integer.parseInt(vNum);
+				String properName = fileName.substring(0, v - 2);
 				fm.getLockMap().put(fileName, null);
 				fm.closeFile(fileName);
-				// TODO add new file: change filename to version++
+				fm.addLocalFileVersion(properName, versionNumber + 1);
 				PropertiesOfPeer.broadcastStatus();
 			}
 			else // lock was null wtf?

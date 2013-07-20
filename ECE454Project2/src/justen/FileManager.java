@@ -13,6 +13,7 @@ public class FileManager implements Serializable{
 	private HashMap<String, ArrayList<Integer>> versionMap;
 	private HashMap<String, Lock> lockMap;
 	
+	private final Object lock = new Object();
 	
 	public FileManager() {
 		localFiles = new HashSet<String>();
@@ -90,7 +91,9 @@ public class FileManager implements Serializable{
 	}
 	
 	public void processStatusUpdate(Status s) {
-		processVersionMap(s.fileVersionMap);
+		synchronized(lock) {
+			processVersionMap(s.fileVersionMap);
+		}
 	}
 	
 	private void processVersionMap(HashMap<String, ArrayList<Integer>> map) {
