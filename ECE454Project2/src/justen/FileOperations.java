@@ -1,7 +1,8 @@
 package justen;
 
-import java.util.ArrayList;
 import java.util.Map.Entry;
+
+import client.ClientStateManager;
 
 import data.PropertiesOfPeer;
 
@@ -42,10 +43,11 @@ public class FileOperations
 				return -1;
 			
 			// TODO: get file from peer
-//			if (openFile(fileName, operation))
-//				PropertiesOfPeer.broadcastStatus();
-//			else
-//				return -1;
+			ClientStateManager.GetFileFromOtherPeer(device, fileName);
+			if (openFile(fileName, operation))
+				PropertiesOfPeer.broadcastStatus();
+			else
+				return -1;
 			
 		}
 		else {
@@ -55,8 +57,6 @@ public class FileOperations
 			else
 				return -1;
 		}
-			
-		
 		return 0;
 	}
 	
