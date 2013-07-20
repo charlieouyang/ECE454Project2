@@ -83,9 +83,9 @@ public class FileOperations
 				PropertiesOfPeer.broadcastStatus();
 			}
 			else if (fm.getLockMap().get(fileName) instanceof WriterLock) {
-				// TODO: save file
 				fm.getLockMap().put(fileName, null);
 				fm.closeFile(fileName);
+				// TODO add new file: change filename to version++
 				PropertiesOfPeer.broadcastStatus();
 			}
 			else // lock was null wtf?

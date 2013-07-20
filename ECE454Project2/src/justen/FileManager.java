@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map.Entry;
 
 public class FileManager implements Serializable{
 	private HashSet<String> localFiles;
@@ -42,6 +43,22 @@ public class FileManager implements Serializable{
 	
 	public HashMap<String, ArrayList<Integer>> getAllFiles() {
 		return versionMap;
+	}
+	
+	public void deleteFile(String fileName) {
+		
+	}
+	
+	public void deleteAllFileVersions(String fileName) {
+		
+	}
+	
+	public HashSet<String> getLogicalView() {
+		// TODO: build logical view
+		for (Entry<String, ArrayList<Integer>> e : versionMap.entrySet()) {
+			
+		}
+		return null;
 	}
 	
 	public HashMap<String, Lock> getLockMap() {
