@@ -43,7 +43,7 @@ public class PropertiesOfPeer {
 			Entry entry = it.next();
 			Status status = null;
 			
-			deviceAndStatusMap.put((String)entry.getKey() + Integer.toString((Integer)entry.getValue()), status);
+			deviceAndStatusMap.put((String)entry.getKey() + ":" + Integer.toString((Integer)entry.getValue()), status);
 		}
 	}
 	
@@ -104,7 +104,8 @@ public class PropertiesOfPeer {
 		//Gotta make sure the data object is actually of the status class
 		Status anotherPeerStatus = null;
 		Object statusData = incomingMessageStatusFromAnotherPeer.getData();
-		String senderName = incomingMessageStatusFromAnotherPeer.getSenderName();
+		String senderName = incomingMessageStatusFromAnotherPeer.getIpAddress() 
+				+ ":" + Integer.toString(incomingMessageStatusFromAnotherPeer.getPortNumber());
 		
 		//Don't know if the class comparison thing is correct
 		if (statusData != null && statusData instanceof Status){
@@ -123,7 +124,7 @@ public class PropertiesOfPeer {
 		while (it.hasNext()) {
 			Entry entry = it.next();
 			Message statusBroadcastMessage = new Message(ipAddress, portNumber, MESSAGE_TYPE.STATUS_UPDATE, currentPeerStatus);
-			ClientStateManager.AddNewMessageToQueue((String)entry.getKey() + Integer.toString((Integer)entry.getValue()), statusBroadcastMessage);
+			ClientStateManager.AddNewMessageToQueue((String)entry.getKey() + ":" + Integer.toString((Integer)entry.getValue()), statusBroadcastMessage);
 		}
 	}
 	

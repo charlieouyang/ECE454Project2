@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import data.Message;
+import data.Message.MESSAGE_TYPE;
+import data.PropertiesOfPeer;
 
 public class ClientStateManager {
 	public static HashMap<String, Message> otherPeersAndMessageQueue;

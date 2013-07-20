@@ -2,6 +2,7 @@ package main;
 
 import client.ClientStateManager;
 import client.ConnectionDispatcher;
+import client.GetFileManager;
 import data.PropertiesOfPeer;
 import server.FileServer;
 
@@ -11,6 +12,7 @@ public class Peer {
 	{
 		final PropertiesOfPeer properties = new PropertiesOfPeer();
 		final ClientStateManager clientStateManager = new ClientStateManager();
+		final GetFileManager getFileManager = new GetFileManager();
 			
 		UserInputThread userInputThread = new UserInputThread();
 		userInputThread.start();

@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import client.ClientStateManager;
+
 import justen.Status;
 
 import data.FileWrapper;
@@ -20,10 +22,9 @@ public class ServerDecipherMessageRepo {
 
 		if (type.equals(Message.MESSAGE_TYPE.FILE)) {
 			//Call file storage and reconstruction stuff
-			
 			//This is just temp.
 			FileWrapper fileWrapper = (FileWrapper) incomingMessage.getData();
-			File file = new File("C://test//" + fileWrapper.getFileName());
+			File file = new File(PropertiesOfPeer.PeerName + "//" + fileWrapper.getFileName());
 			byte[] content = fileWrapper.getContent();
 			
 			
@@ -33,9 +34,26 @@ public class ServerDecipherMessageRepo {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			
 		}
+		
+		else if (type.equals(Message.MESSAGE_TYPE.FILE_REQUEST)) {
+			String fileName = (String) incomingMessage.getData();
+			File file = new File(PropertiesOfPeer.PeerName + "//" + fileName);
+			byte[] content = null;
+			
+			try {
+				content = Files.readAllBytes(file.toPath());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			FileWrapper fileWrapper = new FileWrapper(file.getName(), content);
+			
+			Message fileMessage = new Message (PropertiesOfPeer.ipAddress, PropertiesOfPeer.portNumber, MESSAGE_TYPE.FILE, fileWrapper);
+			ClientStateManager.AddNewMessageToQueue(incomingMessage.getIpAddress() + ":" + incomingMessage.getPortNumber(), fileMessage);
+		}
+		
 		else if (type.equals(Message.MESSAGE_TYPE.STATUS_UPDATE)) {
 			PropertiesOfPeer.updateOtherPeersStatus(incomingMessage);
 		}

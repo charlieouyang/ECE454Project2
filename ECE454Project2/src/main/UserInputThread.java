@@ -66,7 +66,7 @@ public class UserInputThread extends Thread {
 							FileWrapper fileWrapper = new FileWrapper(file.getName(), content);
 							
 							Message fileMessage = new Message ((String)entry.getKey(), (Integer)entry.getValue(), MESSAGE_TYPE.FILE, fileWrapper);
-							ClientStateManager.AddNewMessageToQueue((String)entry.getKey() + (Integer)entry.getValue(), fileMessage);
+							ClientStateManager.AddNewMessageToQueue((String)entry.getKey() + ":" + (Integer)entry.getValue(), fileMessage);
 						}
 						
 					} else {
