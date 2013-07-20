@@ -57,7 +57,11 @@ public class FileManager {
 		versionMap.put(fileName, bitString);
 	}
 	
-	public void processVersionMap(HashMap<String, ArrayList<Integer>> map) {
+	public void processStatusUpdate(Status s) {
+		processVersionMap(s.fileVersionMap);
+	}
+	
+	private void processVersionMap(HashMap<String, ArrayList<Integer>> map) {
 		for (String file : map.keySet()) {
 			if (localFiles.contains(file) || remoteFiles.contains(file)) {
 				// we have the file, check versions
@@ -114,6 +118,10 @@ public class FileManager {
 				versionMap.get(fileName).set(versionNumber, 0);
 			return true;
 		}
+	}
+	
+	public boolean fileExists(String filename) {
+		return versionMap.containsKey(filename);
 	}
 	
 	public void addRemoteFile(String fileName) {
