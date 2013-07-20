@@ -28,7 +28,6 @@ public class PropertiesOfPeer {
 	
 	//File Management
 	public static FileManager fileManager = new FileManager();
-	public static Status currentPeerStatus = new Status(fileManager);
 	
 	public PropertiesOfPeer(){
 		//List of ip address to port number mappings
@@ -124,9 +123,13 @@ public class PropertiesOfPeer {
 		Iterator<Entry> it = ipAddrPortNumMappingAlive.iterator();
 		while (it.hasNext()) {
 			Entry entry = it.next();
-			Message statusBroadcastMessage = new Message(ipAddress, portNumber, MESSAGE_TYPE.STATUS_UPDATE, currentPeerStatus);
+			Message statusBroadcastMessage = new Message(ipAddress, portNumber, MESSAGE_TYPE.STATUS_UPDATE, getCurrentStatus());
 			ClientStateManager.AddNewMessageToQueue((String)entry.getKey() + ":" + Integer.toString((Integer)entry.getValue()), statusBroadcastMessage);
 		}
+	}
+	
+	public static Status getCurrentStatus(){
+		return new Status(fileManager);
 	}
 	
 	/*
