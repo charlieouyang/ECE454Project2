@@ -46,4 +46,9 @@ public class ClientStateManager {
 	    }
 	    return newMessage;
 	}
+	
+	public static void GetFileFromOtherPeer(String peerName, String fileName){
+		Message fileRequest = new Message (PropertiesOfPeer.ipAddress, PropertiesOfPeer.portNumber, MESSAGE_TYPE.FILE_REQUEST, fileName);
+		ClientStateManager.AddNewMessageToQueue(peerName, fileRequest);
+	}
 }
