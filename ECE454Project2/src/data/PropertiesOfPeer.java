@@ -1,27 +1,51 @@
 package data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import client.ClientStateManager;
+
+import data.Message.MESSAGE_TYPE;
+
+import justen.FileManager;
+import justen.Status;
 
 public class PropertiesOfPeer {
 	//Global variables for the file server and client to access
 	public static String ipAddress = "localhost";
 	public static int portNumber = 2000;			//Port number of this host
 	public static String PeerName = ipAddress + "." + portNumber;
+	public static boolean peerUp = false;
+	
 	public static ArrayList<Entry> ipAddrPortNumMappingAll = new ArrayList<Entry>();
 	public static ArrayList<Entry> ipAddrPortNumMappingAlive = new ArrayList<Entry>();
-	public static boolean peerUp = false;
+	public static HashMap<String, Status> deviceAndStatusMap = new HashMap<String, Status>();
+	
+	//File Management
+	public static FileManager fileManager = new FileManager();
+	public static Status currentPeerStatus = new Status(fileManager);
 	
 	public PropertiesOfPeer(){
 		//List of ip address to port number mappings
 		Map.Entry<String, Integer> entry1 = new MyEntry<String, Integer>("localhost", 1000);
 		ipAddrPortNumMappingAll.add(entry1);
+		
+		InitializeDeviceAndStatusMap();
 	}
 	
-	
+	private static void InitializeDeviceAndStatusMap(){
+		Iterator<Entry> it = ipAddrPortNumMappingAll.iterator();
+		while (it.hasNext()) {
+			Entry entry = it.next();
+			Status status = null;
+			
+			deviceAndStatusMap.put((String)entry.getKey() + (String)entry.getValue(), status);
+		}
+	}
 	
 	public static void AddEntryToIPAddrPortNumMappingAlive(String ipAddress, int portNumber){
 		Map.Entry<String, Integer> entry = new MyEntry<String, Integer>(ipAddress, portNumber);
@@ -75,22 +99,6 @@ public class PropertiesOfPeer {
 		peerUp = true;
 	}
 	
-	
-//	//This will be used to update the peer's status info
-//	public static void updateCurrentPeerStatus(){
-//		currentPeerStatus = new Status(peerConcurrencyManager);
-//	}
-//	
-//	public static synchronized Status getCurrentPeerStatus(){
-//		Status tempStatus = currentPeerStatus;
-//		updateCurrentPeerStatus();
-//		return tempStatus;
-//	}
-	
-	
-	
-	/*
-	
 	//Receive status from another peer and update that info
 	public static void updateOtherPeersStatus(Message incomingMessageStatusFromAnotherPeer){
 		//Gotta make sure the data object is actually of the status class
@@ -100,12 +108,9 @@ public class PropertiesOfPeer {
 		
 		//Don't know if the class comparison thing is correct
 		if (statusData != null && statusData instanceof Status){
-			anotherPeerStatus = (Status) incomingMessageStatusFromAnotherPeer.getData();
-			listOfOtherPeersStatus.put(senderName, anotherPeerStatus);
-			
-			//Update your local metaData file in accordance to response metaData
-			Hashtable<String, TorrentMetaData> metaDataTable = anotherPeerStatus.allMetaData;
-			UpdateThisPeerMetaDataTable(metaDataTable);
+			anotherPeerStatus = (Status) statusData;
+			deviceAndStatusMap.put(senderName, anotherPeerStatus);
+			fileManager.processStatusUpdate(anotherPeerStatus);
 		}
 		else{
 			//Don't do anything because it's an unknown object...
@@ -113,38 +118,16 @@ public class PropertiesOfPeer {
 		}
 	}
 	
-	*/
+	public static void broadcastStatus(){
+		Iterator<Entry> it = ipAddrPortNumMappingAlive.iterator();
+		while (it.hasNext()) {
+			Entry entry = it.next();
+			Message statusBroadcastMessage = new Message(ipAddress, portNumber, MESSAGE_TYPE.STATUS_UPDATE, currentPeerStatus);
+			ClientStateManager.AddNewMessageToQueue((String)entry.getKey() + (String)entry.getValue(), statusBroadcastMessage);
+		}
+	}
 	
 	/*
-	
-	public static void UpdateThisPeerMetaDataTable(Hashtable<String, TorrentMetaData> listOfFilesAndMetaData){
-		//This is replacing all existing entries and adding new ones
-		
-		if(currentPeerStatus.allMetaData == null){
-			//System.out.println("Current size of allMetaDataForThisPeer : " + currentPeerStatus.allMetaData.size());
-		}
-		else{
-			//System.out.println("It's not null");
-		}
-
-		Iterator<Map.Entry<String, TorrentMetaData>> otherPeersMetaData = listOfFilesAndMetaData.entrySet().iterator();
-
-		while (otherPeersMetaData.hasNext()) {
-			Map.Entry<String, TorrentMetaData> entry = otherPeersMetaData.next();
-			if (!currentPeerStatus.allMetaData.containsKey(entry.getKey()))	{
-				listOfFilesToGet.put(entry.getKey(), entry.getValue());
-			}
-		}
-
-		peerConcurrencyManager.mergeMetaData(listOfFilesAndMetaData);
-		currentPeerStatus.allMetaData.putAll(listOfFilesAndMetaData);
-	}
-	
-	public static void broadcastStatus(){
-		ClientBroadcastStatus statusBroadcastThread = new ClientBroadcastStatus(PropertiesOfPeer.ipAddrPortNumMappingAll);
-		statusBroadcastThread.start();
-	}
-	
 	public static void printStatusInformation() {
 		if (currentPeerStatus.fileNameIndexMap.size() == 0) {
 			System.out.println("No files on this peer.");
