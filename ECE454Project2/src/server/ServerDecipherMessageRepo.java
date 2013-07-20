@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import justen.Status;
+
 import data.FileWrapper;
 import data.Message;
 import data.Message.MESSAGE_TYPE;
@@ -33,6 +35,9 @@ public class ServerDecipherMessageRepo {
 			}
 			
 			
+		}
+		else if (type.equals(Message.MESSAGE_TYPE.STATUS_UPDATE)) {
+			PropertiesOfPeer.updateOtherPeersStatus(incomingMessage);
 		}
 		else {
 			System.err.println("Unknown message type... You fucked up!");

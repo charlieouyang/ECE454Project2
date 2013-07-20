@@ -1,10 +1,11 @@
 package justen;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class FileManager {
+public class FileManager implements Serializable{
 	private HashSet<String> localFiles;
 	private HashSet<String> remoteFiles;
 	private HashMap<String, ArrayList<Integer>> versionMap;

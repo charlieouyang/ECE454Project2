@@ -73,6 +73,10 @@ public class UserInputThread extends Thread {
 						System.out.println("[** SYSTEM NOTIFICATION **]	System is shut down");
 					}
 				}
+				
+				else if (input.equals("status")){
+					PropertiesOfPeer.broadcastStatus();
+				}
 			}
 		} catch (Exception e) {
 			System.err.println("User console error");

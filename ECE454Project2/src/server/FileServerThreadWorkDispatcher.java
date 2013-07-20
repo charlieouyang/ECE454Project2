@@ -41,8 +41,7 @@ public class FileServerThreadWorkDispatcher extends Thread {
 				
 				// Decipher to see what the client wants
 				if (incomingMessage != null) {
-					Message returnMessage = ServerDecipherMessageRepo
-							.DecipherMessageAndReturn(incomingMessage);
+					Message returnMessage = ServerDecipherMessageRepo.DecipherMessageAndReturn(incomingMessage);
 
 					if (returnMessage != null) {
 						String ipAddress = incomingMessage.getIpAddress();
