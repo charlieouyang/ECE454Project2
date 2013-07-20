@@ -57,12 +57,16 @@ public class UserInputThread extends Thread {
 				
 				else if (input.equals("request")){
 					if (PropertiesOfPeer.peerUp) {
+						
+						System.out.println("[** KEYBOARD INPUT **]	Please enter file name");  
+						String input2 = scanner.next(); 
+						
 						Iterator<Entry> it = PropertiesOfPeer.ipAddrPortNumMappingAlive.iterator();
 						while (it.hasNext()) {
 							Entry entry = it.next();
 							
 							ClientStateManager.GetFileFromOtherPeer((String)entry.getKey() + ":" + 
-									Integer.toString((Integer)entry.getValue()), "test1.pdf");
+									Integer.toString((Integer)entry.getValue()), input2);
 						}
 						
 					} else {

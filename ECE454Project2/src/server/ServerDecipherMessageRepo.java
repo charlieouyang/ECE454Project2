@@ -39,13 +39,14 @@ public class ServerDecipherMessageRepo {
 		else if (type.equals(Message.MESSAGE_TYPE.FILE_REQUEST)) {
 			String fileName = (String) incomingMessage.getData();
 			File file = new File(PropertiesOfPeer.folderPeerName + "//" + fileName);
+			
 			byte[] content = null;
 			
 			try {
 				content = Files.readAllBytes(file.toPath());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.err.println("File not found");
+				return null;
 			}
 			
 			FileWrapper fileWrapper = new FileWrapper(file.getName(), content);
