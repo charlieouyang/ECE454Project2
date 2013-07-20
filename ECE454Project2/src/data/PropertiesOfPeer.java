@@ -43,7 +43,7 @@ public class PropertiesOfPeer {
 			Entry entry = it.next();
 			Status status = null;
 			
-			deviceAndStatusMap.put((String)entry.getKey() + (String)entry.getValue(), status);
+			deviceAndStatusMap.put((String)entry.getKey() + Integer.toString((Integer)entry.getValue()), status);
 		}
 	}
 	
@@ -123,7 +123,7 @@ public class PropertiesOfPeer {
 		while (it.hasNext()) {
 			Entry entry = it.next();
 			Message statusBroadcastMessage = new Message(ipAddress, portNumber, MESSAGE_TYPE.STATUS_UPDATE, currentPeerStatus);
-			ClientStateManager.AddNewMessageToQueue((String)entry.getKey() + (String)entry.getValue(), statusBroadcastMessage);
+			ClientStateManager.AddNewMessageToQueue((String)entry.getKey() + Integer.toString((Integer)entry.getValue()), statusBroadcastMessage);
 		}
 	}
 	
