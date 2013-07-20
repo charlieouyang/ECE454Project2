@@ -8,12 +8,15 @@ import java.util.HashSet;
 public class FileManager implements Serializable{
 	private HashSet<String> localFiles;
 	private HashSet<String> remoteFiles;
+	private HashSet<String> openFiles;
 	private HashMap<String, ArrayList<Integer>> versionMap;
 	private HashMap<String, Lock> lockMap;
+	
 	
 	public FileManager() {
 		localFiles = new HashSet<String>();
 		remoteFiles = new HashSet<String>();
+		openFiles = new HashSet<String>();
 		versionMap = new HashMap<String, ArrayList<Integer>>();
 		lockMap = new HashMap<String, Lock>();
 	}
@@ -24,6 +27,17 @@ public class FileManager implements Serializable{
 	
 	public HashSet<String> getRemoteFiles() {
 		return remoteFiles;
+	}
+	
+	public void openFile(String fileName) {
+		openFiles.add(fileName);
+	}
+	public boolean isFileOpen(String fileName) {
+		return openFiles.contains(fileName);
+	}
+	
+	public void closeFile(String fileName) {
+		openFiles.remove(fileName);
 	}
 	
 	public HashMap<String, ArrayList<Integer>> getAllFiles() {
