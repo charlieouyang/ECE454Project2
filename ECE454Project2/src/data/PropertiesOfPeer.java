@@ -18,7 +18,7 @@ public class PropertiesOfPeer {
 	//Global variables for the file server and client to access
 	public static String ipAddress = "localhost";
 	public static int portNumber = 2000;			//Port number of this host
-	public static String PeerName = ipAddress + "." + portNumber;
+	public static String PeerName = ipAddress + ":" + portNumber;
 	public static boolean peerUp = false;
 	
 	public static ArrayList<Entry> ipAddrPortNumMappingAll = new ArrayList<Entry>();
