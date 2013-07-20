@@ -24,7 +24,7 @@ public class ServerDecipherMessageRepo {
 			//Call file storage and reconstruction stuff
 			//This is just temp.
 			FileWrapper fileWrapper = (FileWrapper) incomingMessage.getData();
-			File file = new File(PropertiesOfPeer.PeerName + "//" + fileWrapper.getFileName());
+			File file = new File(PropertiesOfPeer.folderPeerName + "//" + fileWrapper.getFileName());
 			byte[] content = fileWrapper.getContent();
 			
 			
@@ -38,7 +38,7 @@ public class ServerDecipherMessageRepo {
 		
 		else if (type.equals(Message.MESSAGE_TYPE.FILE_REQUEST)) {
 			String fileName = (String) incomingMessage.getData();
-			File file = new File(PropertiesOfPeer.PeerName + "//" + fileName);
+			File file = new File(PropertiesOfPeer.folderPeerName + "//" + fileName);
 			byte[] content = null;
 			
 			try {
