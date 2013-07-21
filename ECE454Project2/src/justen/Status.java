@@ -12,7 +12,7 @@ public class Status implements Serializable {
 	public HashMap<String, Lock> lockMap;
 	
 	public Status(FileManager fm) {
-		fileVersionMap = fm.getAllFiles();
+		fileVersionMap = fm.getVersionMap();
 		lockMap = fm.getLockMap();
 	}
 }

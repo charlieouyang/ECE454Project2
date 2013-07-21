@@ -42,16 +42,8 @@ public class FileManager implements Serializable{
 		openFiles.remove(fileName);
 	}
 	
-	public HashMap<String, ArrayList<Integer>> getAllFiles() {
+	public HashMap<String, ArrayList<Integer>> getVersionMap() {
 		return versionMap;
-	}
-	
-	public void deleteFile(String fileName) {
-		
-	}
-	
-	public void deleteAllFileVersions(String fileName) {
-		
 	}
 	
 	public HashSet<String> getLogicalView() {
@@ -139,9 +131,8 @@ public class FileManager implements Serializable{
 			return false;
 		if (allVersions) {
 			localFiles.remove(fileName);
-			for (int i = 0; i < versionMap.get(fileName).size(); i++) {
+			for (int i = 0; i < versionMap.get(fileName).size(); i++)
 				versionMap.get(fileName).set(i, 0);
-			}
 			return true;
 		}
 		else {
@@ -151,6 +142,17 @@ public class FileManager implements Serializable{
 			int versionNumber = Integer.parseInt(vNum);
 			if (versionMap.get(fileName).size() >= versionNumber)
 				versionMap.get(fileName).set(versionNumber, 0);
+			
+			boolean allGone = true;
+			for (int i = 0; i < versionMap.get(fileName).size(); i++) {
+				if (versionMap.get(fileName).get(i) == 1)
+				{
+					allGone = false;
+					break;
+				}
+			}
+			if (allGone)
+				localFiles.remove(fileName);
 			return true;
 		}
 	}

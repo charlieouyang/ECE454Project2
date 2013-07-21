@@ -87,6 +87,40 @@ public class FileOperations
 		return 0;
 	}
 	
+	public int delete(String fileName) {
+		if (!fm.fileExists(fileName))
+			return -1;
+		if (otherDeviceHasReadLock(fileName) || otherDeviceHasWriteLock(fileName))
+			return -1;
+		
+		int v = fileName.lastIndexOf("_") + 2; 
+		String vNum = fileName.substring(v, fileName.lastIndexOf("."));
+		int versionNumber = Integer.parseInt(vNum);
+		if (fm.containsFileLocally(fileName, versionNumber)) {
+			// delete file
+			fm.removeLocalFile(fileName, false);
+		}
+		// PropertiesOfPeer.broadcastDeleteFile(fileName)
+		return 0;
+	}
+	
+	public int deleteAll(String fileName) {
+		if (fm.getVersionMap().containsKey(fileName))
+			return -1;
+		// check if any of the devices have a lock on any of the files
+		int numVersions = fm.getVersionMap().get(fileName).size();
+		String properName = fileName.substring(0, fileName.lastIndexOf("."));
+		String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+		for (int i = 0; i < numVersions; i++) {
+			if (anyDeviceHasLockOnFile(properName, extension, i))
+				return -1;
+		}
+		fm.removeLocalFile(fileName, true);
+		
+		// PropertiesOfPeer.broadcastDeleteAllFileVersions(fileName)
+		return 0;
+	}
+	
 	private int closeFile(String fileName) {
 		if (!fm.getLockMap().containsKey(fileName)) 
 			return -1;
@@ -122,6 +156,17 @@ public class FileOperations
 			}
 		}
 		return "";
+	}
+	
+	private boolean anyDeviceHasLockOnFile(String properFileName, String extension, int versionNumber) {
+		for (Entry<String, Status> e : PropertiesOfPeer.deviceAndStatusMap.entrySet()) {
+			Status s = e.getValue();
+			if (s.lockMap.containsKey(properFileName + "_" + versionNumber + "." + extension)) {
+				if (s.lockMap.get(properFileName + "_" + versionNumber + "." + extension) != null)
+					return true;
+			}
+		}
+		return false;
 	}
 	
 	private boolean openFile(String fileName, char operation) {
