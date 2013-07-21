@@ -12,8 +12,7 @@ public class FileOperations
 	FileManager fm;
 	
 	public FileOperations(FileManager fm) {
-		this.fm = fm;
-		
+		this.fm = fm; 
 	}
 	
 	public int open(String fileName, char operation) {
@@ -39,11 +38,9 @@ public class FileOperations
 			String device = getDeviceForFile(fileNameProper, versionNumber);
 			int port = Integer.parseInt(device.substring(device.indexOf(":") + 1, device.length()));
 			
-			// check if device is online
 			if (!PropertiesOfPeer.CheckIfThisHostIsStillAlive(device.substring(0, device.indexOf(":")), port)) 
 				return -1;
 			
-			// TODO: get file from peer
 			ClientStateManager.GetFileFromOtherPeer(device, fileName);
 			if (openFile(fileName, operation))
 				PropertiesOfPeer.broadcastStatus();
