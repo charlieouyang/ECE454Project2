@@ -84,8 +84,8 @@ public class FileManager implements Serializable {
 	
 	public void addLocalFile(String fileName) {
 		localFiles.add(fileName);
-		ArrayList<Integer> bitString = new ArrayList<Integer>(1);
-		bitString.set(0, 1);
+		ArrayList<Integer> bitString = new ArrayList<Integer>();
+		bitString.add(1);
 		versionMap.put(fileName, bitString);
 	}
 	
