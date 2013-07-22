@@ -190,6 +190,8 @@ public class FileOperations
 	private boolean otherDeviceHasReadLock(String fileName) {
 		for (Entry<String, Status> e : PropertiesOfPeer.deviceAndStatusMap.entrySet()) {
 			Status s = e.getValue();
+			if (s == null)
+				continue;
 			if (s.lockMap.containsKey(fileName))
 			{
 				if (s.lockMap.get(fileName) != null && s.lockMap.get(fileName) == ReaderLock.getInstance())
@@ -202,6 +204,8 @@ public class FileOperations
 	private boolean otherDeviceHasWriteLock(String fileName) {
 		for (Entry<String, Status> e : PropertiesOfPeer.deviceAndStatusMap.entrySet()) {
 			Status s = e.getValue();
+			if (s == null)
+				continue;
 			if (s.lockMap.containsKey(fileName))
 			{
 				if (s.lockMap.get(fileName) != null && s.lockMap.get(fileName) == WriterLock.getInstance())
