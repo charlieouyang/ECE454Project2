@@ -10,7 +10,7 @@ public final class ReturnCode {
 	public static final int OTHER_DEVICE_HAS_LOCK = -3;
 	public static final int HOST_NOT_ALIVE = -4;
 	public static final int FILE_DOES_NOT_EXIST = -5;
-	
+	public static final int FILE_LOCKED = -6;
 	public static final int COULD_NOT_CREATE_FILE = -998;
 	public static final int GO_FUCK_YOURSELF = -999;
 	
@@ -28,6 +28,8 @@ public final class ReturnCode {
 			return "ERROR: Device containing file is offline";
 		else if (returnCode == -5)
 			return "ERROR: File does not exist";
+		else if (returnCode == -6)
+			return "ERROR: File is locked on this device";
 		else if (returnCode == -998)
 			return "ERROR: Could not create file (???)";
 		else if (returnCode == -999)

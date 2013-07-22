@@ -24,6 +24,13 @@ public class FileManager implements Serializable {
 		lockMap = new HashMap<String, Lock>();
 	}
 	
+	/*
+	 version map: test1.pdf : [0,0,1,1]
+	 localFiles: test2_v0.pdf, test1_v3.pdf
+	 remoteFiles = test1_v0.pdf, test1_v1.pdf
+	 openFiles = test1_v0.pdf
+	 */
+	
 	public HashSet<String> getLocalFiles() {
 		return localFiles;
 	}
@@ -32,19 +39,29 @@ public class FileManager implements Serializable {
 		return remoteFiles;
 	}
 	
-	public void openFile(String fileName) {
+	public void openFile(String fileName) { // fileName = test1_v0.pdf
 		openFiles.add(fileName);
 	}
-	public boolean isFileOpen(String fileName) {
+	
+	/**
+	 * 
+	 * @param fileName (test1_v0.pdf)
+	 * @return
+	 */
+	public boolean isFileOpen(String fileName) { // fileName = test1_v0.pdf
 		return openFiles.contains(fileName);
 	}
 	
-	public void closeFile(String fileName) {
+	public void closeFile(String fileName) { // fileName = test1_v0.pdf
 		openFiles.remove(fileName);
 	}
 	
 	public HashMap<String, ArrayList<Integer>> getVersionMap() {
 		return versionMap;
+	}
+	
+	public boolean fileExistsInVersionMap(String fileName) {// fileName = test1.pdf
+		return versionMap.containsKey(fileName);
 	}
 	
 	public ArrayList<String> getLogicalView() {
@@ -66,7 +83,7 @@ public class FileManager implements Serializable {
 	}
 	
 	// filename contains version num
-	public void setLock(String fileName, Lock lock) {
+	public void setLock(String fileName, Lock lock) { // fileName = test1.pdf
 		lockMap.put(fileName, lock);
 	}
 	
@@ -82,7 +99,7 @@ public class FileManager implements Serializable {
 		return null;
 	}
 	
-	public void addLocalFile(String fileName) { 
+	public void createNewFile(String fileName) { // fileName = test1.pdf
 		String properName = fileName.substring(0, fileName.lastIndexOf("."));
 		String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
 		localFiles.add(properName + "_v0." + extension);
@@ -98,8 +115,18 @@ public class FileManager implements Serializable {
 	}
 	
 	private void processVersionMap(HashMap<String, ArrayList<Integer>> map) {
+		
+		for(String file : map.keySet()) { // all files other peer sees
+			// file = charlie.pdf
+			
+			
+			if (versionMap.containsKey(file)) { // i know of this file
+				
+			}
+		}
+		
 		for (String file : map.keySet()) {
-			if (localFiles.contains(file) || remoteFiles.contains(file)) {
+			if (!localFiles.contains(file) && !remoteFiles.contains(file)) {
 				// we have the file, check versions
 				ArrayList<Integer> remoteBitString = map.get(file);
 				ArrayList<Integer> localBitString = versionMap.get(file);
@@ -115,80 +142,106 @@ public class FileManager implements Serializable {
 			}
 			else
 			{
-				remoteFiles.add(file);
-				versionMap.put(file, map.get(file));
 			}
 		}
 	}
 	
-	public boolean addLocalFileVersion(String fileName, int versionNum) {
-		if (!versionMap.containsKey(fileName))
+	public boolean saveNewFileVersion(String fileName, int versionNum) { // fileName = test1.pdf
+		if (!versionMap.containsKey(fileName)) // should be create
 			return false;
 
-		ArrayList<Integer> temp = versionMap.get(fileName);
-		if (temp.size() >= versionNum)
+		ArrayList<Integer> temp = versionMap.get(fileName); // test1.pdf=[0,0,1,1]
+		if (temp.size() >= versionNum) // shouldn't happen
 			temp.set(versionNum, 1);
 		else // higher version num
 			temp.add(1); // assume that there is time between new file saves
 		versionMap.put(fileName, temp);
-		
 		return true;
 	}
 	
-	public boolean removeLocalFile(String fileName, boolean allVersions) {
+	public boolean deleteSingleFile(String fileName) { // fileName = test1_v0.pdf
 		if (!localFiles.contains(fileName))
 			return false;
-		if (allVersions) {
-			localFiles.remove(fileName);
-//			for (int i = 0; i < versionMap.get(fileName).size(); i++)
-//				versionMap.get(fileName).set(i, 0);
-			versionMap.remove(fileName);
-			return true;
-		}
-		else {
-			//fileName = justen_stable_v1.docx
-			int v = fileName.lastIndexOf("_") + 2; // 13
-			String vNum = fileName.substring(v, fileName.lastIndexOf("."));
-			int versionNumber = Integer.parseInt(vNum);
-			
-			String fileNameProper = fileName.substring(0, fileName.indexOf("_"));
-			String extension = fileName.substring(fileName.lastIndexOf("."));
-			
-			if (versionMap.get(fileNameProper + extension).size() >= versionNumber)
-				versionMap.get(fileNameProper + extension).set(versionNumber, null);
-			
-			boolean allGone = true;
-			for (int i = 0; i < versionMap.get(fileNameProper + extension).size(); i++) {
-				if (versionMap.get(fileNameProper + extension).get(i) == 1)
-				{
-					allGone = false;
-					break;
-				}
-			}
-			if (allGone)
-				localFiles.remove(fileName);
-			return true;
-		}
+		
+		int vNum = getVersionNumberFromFile(fileName);
+		
+		// ok we have file, let's remove from local and from version map
+		localFiles.remove(fileName);
+		ArrayList<Integer> temp = versionMap.get(getProperName(fileName));
+		temp.set(vNum, null);
+		
+		if (!allFilesDeleted(temp))
+			versionMap.put(getProperName(fileName), temp);
+		else
+			versionMap.remove(getProperName(fileName));
+		return true;
 	}
 	
-	public boolean fileExists(String fileName) {
+	private boolean allFilesDeleted(ArrayList<Integer> bitString) {
+		boolean allGone = true;
+		for (int i = 0; i < bitString.size(); i++) {
+			if (bitString.get(i) != null) {
+				allGone = false;
+				break;
+			}
+		}
+		return allGone;
+	}
+	
+	public boolean deleteAllVersionsOfFile(String fileName) { // fileName = test1.pdf
+		ArrayList<String> versionsToDelete = new ArrayList<String>();
+		for (String file : localFiles) {
+			String temp = getProperName(file);
+			if (fileName.equals(temp)) 
+				versionsToDelete.add(file);
+		}
+		
+		if (versionsToDelete.size() != 0) {
+			for (String file : versionsToDelete)
+				localFiles.remove(file);
+		}
+		
+		versionMap.remove(fileName);
+		return true;
+	}
+	
+	/**
+	 * Takes in filename with version and gives just file name
+	 * @param fileName (test1_v0.pdf)
+	 * @return test1.pdf
+	 */
+	public static String getProperName(String fileName) {
+		String properName = fileName.substring(0, fileName.lastIndexOf("_")); //test1
+		String extension = fileName.substring(fileName.lastIndexOf(".")); //.pdf
+		return properName + extension;
+	}
+	
+	public static int getVersionNumberFromFile(String fileName) {
+		return Integer.parseInt(
+				fileName.substring(fileName.lastIndexOf("_v") + 2, 
+				fileName.lastIndexOf(".")));
+	}
+	
+	/**
+	 * 
+	 * @param fileName (test1_v0.pdf)
+	 * @return
+	 */
+	public boolean fileExists(String fileName) { // fileName = test1_v0.pdf
 		return localFiles.contains(fileName) || remoteFiles.contains(fileName);
 	}
 	
-	public void addRemoteFile(String fileName) {
+	public void addRemoteFile(String fileName) { // fileName = test1_v0.pdf
 		remoteFiles.add(fileName);
 	}
 	
-	public boolean containsFileLocally(String fileName, int versionNum) {
-		if (!versionMap.containsKey(fileName))
-			return false;
-		else
-		{
-			ArrayList<Integer> temp = versionMap.get(fileName);
-			if (versionNum > temp.size())
-				return false;
-			return (temp.get(versionNum) == 1);
-		}
+	/**
+	 * 
+	 * @param fileName (test1_v0.pdf)
+	 * @return
+	 */
+	public boolean containsFileLocally(String fileName) { // fileName = test1_v0.pdf
+		return localFiles.contains(fileName);
 	}
 	
 	public boolean containsFileRemotely(String filename) {

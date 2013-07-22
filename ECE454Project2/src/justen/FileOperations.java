@@ -15,7 +15,7 @@ public class FileOperations
 		this.fm = fm; 
 	}
 	
-	public int open(String fileName, char operation) {
+	public int open(String fileName, char operation) { //fileName = test1_v0.pdf
 		if (operation != 'r' && operation != 'w')
 			return ReturnCode.INCORRECT_OPERATION;
 		
@@ -25,10 +25,8 @@ public class FileOperations
 		int v = fileName.lastIndexOf("_") + 2; 
 		String vNum = fileName.substring(v, fileName.lastIndexOf("."));
 		int versionNumber = Integer.parseInt(vNum);
-		String fileNameProper = fileName.substring(0, fileName.indexOf("_"));
-		String extension = fileName.substring(fileName.lastIndexOf("."));
 		
-		if (!fm.containsFileLocally(fileNameProper + extension, versionNumber)) {
+		if (!fm.containsFileLocally(fileName)) {
 			if (operation == 'w' && (otherDeviceHasReadLock(fileName) || !otherDeviceHasWriteLock(fileName)))
 				return ReturnCode.OTHER_DEVICE_HAS_LOCK; // prevents downloading file if other device has lock
 			
@@ -36,7 +34,7 @@ public class FileOperations
 				return ReturnCode.OTHER_DEVICE_HAS_LOCK;
 			
 			
-			String device = getDeviceForFile(fileNameProper, versionNumber);
+			String device = getDeviceForFile(FileManager.getProperName(fileName), versionNumber);
 			int port = Integer.parseInt(device.substring(device.indexOf(":") + 1, device.length()));
 			
 			if (!PropertiesOfPeer.CheckIfThisHostIsStillAlive(device.substring(0, device.indexOf(":")), port)) 
@@ -59,7 +57,7 @@ public class FileOperations
 		return 0;
 	}
 	
-	public int close(String fileName) {
+	public int close(String fileName) { // fileName = test1_v0.pdf
 		if (!fm.fileExists(fileName)) 
 			return ReturnCode.FILE_DOES_NOT_EXIST;
 		if (!fm.isFileOpen(fileName))
@@ -68,8 +66,8 @@ public class FileOperations
 		return closeFile(fileName);
 	}
 	
-	public int create(String fileName) {
-		if (fm.fileExists(fileName))
+	public int create(String fileName) { // test1.pdf
+		if (fm.fileExistsInVersionMap(fileName))
 			return ReturnCode.FILE_ALREADY_EXISTS;
 		
 		String properName = fileName.substring(0, fileName.indexOf("."));
@@ -82,74 +80,66 @@ public class FileOperations
 			return ReturnCode.COULD_NOT_CREATE_FILE;
 		}
 		
-		fm.addLocalFile(fileName);
+		fm.createNewFile(fileName);
 		PropertiesOfPeer.broadcastStatus();
 		return ReturnCode.SUCCESS;
 	}
 	
-	public int delete(String fileName) {
+	public int delete(String fileName) { // fileName = test1_v0.pdf
 		if (!fm.fileExists(fileName))
 			return ReturnCode.FILE_DOES_NOT_EXIST;
 		if (otherDeviceHasReadLock(fileName) || otherDeviceHasWriteLock(fileName))
 			return ReturnCode.OTHER_DEVICE_HAS_LOCK;
+		if (fm.getLockType(fileName) != null) 
+			return ReturnCode.FILE_LOCKED;
 		
-		int v = fileName.lastIndexOf("_") + 2; 
-		String vNum = fileName.substring(v, fileName.lastIndexOf("."));
-		int versionNumber = Integer.parseInt(vNum);
-		
-		String fileNameProper = fileName.substring(0, fileName.indexOf("_"));
-		String extension = fileName.substring(fileName.lastIndexOf("."));
-		
-		if (fm.containsFileLocally(fileNameProper + extension, versionNumber)) {
-			// delete file
-			fm.removeLocalFile(fileName, false);
+		if (fm.containsFileLocally(fileName)) { 
+			fm.deleteSingleFile(fileName);
+			PropertiesOfPeer.broadcastStatus();
 		}
-		
+			
 		PropertiesOfPeer.deleteFileBroadcast(fileName);
-		PropertiesOfPeer.broadcastStatus();
 		return ReturnCode.SUCCESS;
 	}
 	
-	public int deleteAll(String fileName) {
-		if (fm.getVersionMap().containsKey(fileName))
+	public int deleteAll(String fileName) { // fileName = test1.pdf
+		if (fm.fileExistsInVersionMap(fileName))
 			return ReturnCode.FILE_DOES_NOT_EXIST;
-		// check if any of the devices have a lock on any of the files
+		
 		int numVersions = fm.getVersionMap().get(fileName).size();
 		String properName = fileName.substring(0, fileName.lastIndexOf("."));
 		String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
 		for (int i = 0; i < numVersions; i++) {
 			if (anyDeviceHasLockOnFile(properName, extension, i))
 				return ReturnCode.OTHER_DEVICE_HAS_LOCK;
+			else if (fm.getLockType(fileName) != null)
+				return ReturnCode.FILE_LOCKED;
 		}
-		fm.removeLocalFile(fileName, true);
 		
+		fm.deleteAllVersionsOfFile(fileName);
 		PropertiesOfPeer.deleteFileAllVersionsBroadcast(fileName);
 		PropertiesOfPeer.broadcastStatus();
 		return ReturnCode.SUCCESS;
 	}
 	
-	private int closeFile(String fileName) {
+	private int closeFile(String fileName) { // fileName = test1_v0.pdf
 		if (!fm.getLockMap().containsKey(fileName)) 
 			return ReturnCode.FILE_DOES_NOT_EXIST;
 		else {
 			if (fm.getLockMap().get(fileName) instanceof ReaderLock) {
 				fm.getLockMap().put(fileName, null);
 				fm.closeFile(fileName);
-				PropertiesOfPeer.broadcastStatus();
 			}
 			else if (fm.getLockMap().get(fileName) instanceof WriterLock) {
-				int v = fileName.lastIndexOf("_") + 2; 
-				String vNum = fileName.substring(v, fileName.lastIndexOf("."));
-				int versionNumber = Integer.parseInt(vNum);
-				String properName = fileName.substring(0, v - 2);
+				int versionNumber = FileManager.getVersionNumberFromFile(fileName);
 				fm.getLockMap().put(fileName, null);
 				fm.closeFile(fileName);
-				fm.addLocalFileVersion(properName, versionNumber + 1);
-				PropertiesOfPeer.broadcastStatus();
+				fm.saveNewFileVersion(fileName, versionNumber + 1);
 			}
 			else // lock was null wtf?
 				return ReturnCode.GO_FUCK_YOURSELF;
 		}
+		PropertiesOfPeer.broadcastStatus();
 		return ReturnCode.SUCCESS;
 			
 	}
@@ -168,8 +158,8 @@ public class FileOperations
 	private boolean anyDeviceHasLockOnFile(String properFileName, String extension, int versionNumber) {
 		for (Entry<String, Status> e : PropertiesOfPeer.deviceAndStatusMap.entrySet()) {
 			Status s = e.getValue();
-			if (s.lockMap.containsKey(properFileName + "_" + versionNumber + "." + extension)) {
-				if (s.lockMap.get(properFileName + "_" + versionNumber + "." + extension) != null)
+			if (s.lockMap.containsKey(properFileName + "_v" + versionNumber + "." + extension)) {
+				if (s.lockMap.get(properFileName + "_v" + versionNumber + "." + extension) != null)
 					return true;
 			}
 		}
@@ -193,6 +183,11 @@ public class FileOperations
 		return true;
 	}
 	
+	/**
+	 * 
+	 * @param fileName (test1_v0.pdf)
+	 * @return
+	 */
 	private boolean otherDeviceHasReadLock(String fileName) {
 		for (Entry<String, Status> e : PropertiesOfPeer.deviceAndStatusMap.entrySet()) {
 			Status s = e.getValue();
@@ -207,6 +202,11 @@ public class FileOperations
 		return false;
 	}
 	
+	/**
+	 * 
+	 * @param fileName (test1_v0.pdf)
+	 * @return
+	 */
 	private boolean otherDeviceHasWriteLock(String fileName) {
 		for (Entry<String, Status> e : PropertiesOfPeer.deviceAndStatusMap.entrySet()) {
 			Status s = e.getValue();

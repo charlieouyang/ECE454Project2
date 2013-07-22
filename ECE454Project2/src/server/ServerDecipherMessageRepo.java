@@ -71,14 +71,14 @@ public class ServerDecipherMessageRepo {
 		else if (type.equals(Message.MESSAGE_TYPE.DELETEFILE)) {
 			//CALL DELETE ONE FILE
 			String fileName = (String) incomingMessage.getData();
-			if (!PropertiesOfPeer.fileManager.removeLocalFile(fileName, false)){
+			if (!PropertiesOfPeer.fileManager.deleteSingleFile(fileName)){
 				
 			}
 		}
 		else if (type.equals(Message.MESSAGE_TYPE.DELETEALLVERSIONSOFFILE)) {
 			//CALL DELETE ALL VERSIONS OF FILE
 			String fileName = (String) incomingMessage.getData();
-			PropertiesOfPeer.fileManager.removeLocalFile(fileName, true);
+			PropertiesOfPeer.fileManager.deleteAllVersionsOfFile(fileName);
 		}
 		else {
 			System.err.println("Unknown message type... You fucked up!");
