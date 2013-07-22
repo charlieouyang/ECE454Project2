@@ -82,6 +82,7 @@ public class FileOperations
 		}
 		
 		//TODO: Update the file manager
+		fm.addLocalFile(fileName);
 		PropertiesOfPeer.broadcastStatus();
 		return 0;
 	}
@@ -100,7 +101,6 @@ public class FileOperations
 			fm.removeLocalFile(fileName, false);
 		}
 		
-		//TODO: Handle delete broadcast from another peer
 		PropertiesOfPeer.deleteFileBroadcast(fileName);
 		PropertiesOfPeer.broadcastStatus();
 		return 0;
@@ -119,8 +119,6 @@ public class FileOperations
 		}
 		fm.removeLocalFile(fileName, true);
 		
-		
-		//TODO: Handle delete broadcast from another peer
 		PropertiesOfPeer.deleteFileAllVersionsBroadcast(fileName);
 		PropertiesOfPeer.broadcastStatus();
 		return 0;
