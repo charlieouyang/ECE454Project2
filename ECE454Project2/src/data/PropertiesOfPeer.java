@@ -132,6 +132,24 @@ public class PropertiesOfPeer {
 		return new Status(fileManager);
 	}
 	
+	public static void deleteFileBroadcast(String fileName){
+		Iterator<Entry> it = ipAddrPortNumMappingAlive.iterator();
+		while (it.hasNext()) {
+			Entry entry = it.next();
+			Message deleteFileBroadcastMessage = new Message(ipAddress, portNumber, MESSAGE_TYPE.DELETEFILE, fileName);
+			ClientStateManager.AddNewMessageToQueue((String)entry.getKey() + ":" + Integer.toString((Integer)entry.getValue()), deleteFileBroadcastMessage);
+		}
+	}
+	
+	public static void deleteFileAllVersionsBroadcast(String fileName){
+		Iterator<Entry> it = ipAddrPortNumMappingAlive.iterator();
+		while (it.hasNext()) {
+			Entry entry = it.next();
+			Message deleteFileBroadcastMessage = new Message(ipAddress, portNumber, MESSAGE_TYPE.DELETEALLVERSIONSOFFILE, fileName);
+			ClientStateManager.AddNewMessageToQueue((String)entry.getKey() + ":" + Integer.toString((Integer)entry.getValue()), deleteFileBroadcastMessage);
+		}
+	}
+	
 	/*
 	public static void printStatusInformation() {
 		if (currentPeerStatus.fileNameIndexMap.size() == 0) {

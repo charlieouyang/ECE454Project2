@@ -58,6 +58,16 @@ public class ServerDecipherMessageRepo {
 		else if (type.equals(Message.MESSAGE_TYPE.STATUS_UPDATE)) {
 			PropertiesOfPeer.updateOtherPeersStatus(incomingMessage);
 		}
+		else if (type.equals(Message.MESSAGE_TYPE.DELETEFILE)) {
+			//CALL DELETE ONE FILE
+			String fileName = (String) incomingMessage.getData();
+			//TODO: Call Pinto's method in handling delete message in FileManager
+		}
+		else if (type.equals(Message.MESSAGE_TYPE.DELETEALLVERSIONSOFFILE)) {
+			//CALL DELETE ALL VERSIONS OF FILE
+			String fileName = (String) incomingMessage.getData();
+			//TODO: Call Pinto's method in handling delete message in FileManager
+		}
 		else {
 			System.err.println("Unknown message type... You fucked up!");
 		}

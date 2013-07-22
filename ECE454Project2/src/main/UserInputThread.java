@@ -76,6 +76,21 @@ public class UserInputThread extends Thread {
 					}
 				}
 				
+				else if (input.equals("delete")){
+					//open
+					//
+					if (PropertiesOfPeer.peerUp) {
+						
+						System.out.println("[** KEYBOARD INPUT **]	Please enter file name you want to delete");  
+						String input2 = scanner.next(); 
+						
+						//Call Pinto's delete method
+						
+					} else {
+						System.out.println("[** SYSTEM NOTIFICATION **]	System is shut down");
+					}
+				}
+				
 				else if (input.equals("status")){
 					PropertiesOfPeer.broadcastStatus();
 				}

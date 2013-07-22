@@ -9,6 +9,8 @@ public class Message implements Serializable {
 		STATUS_UPDATE,
 		FILE_REQUEST,
 		FILE,
+		DELETEFILE,
+		DELETEALLVERSIONSOFFILE,
 		TEST
 	}
 	
