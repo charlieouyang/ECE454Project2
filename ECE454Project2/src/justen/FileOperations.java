@@ -26,8 +26,9 @@ public class FileOperations
 		String vNum = fileName.substring(v, fileName.lastIndexOf("."));
 		int versionNumber = Integer.parseInt(vNum);
 		String fileNameProper = fileName.substring(0, fileName.indexOf("_"));
+		String extension = fileName.substring(fileName.lastIndexOf("."));
 		
-		if (!fm.containsFileLocally(fileName, versionNumber)) {
+		if (!fm.containsFileLocally(fileNameProper + extension, versionNumber)) {
 			if (operation == 'w' && (otherDeviceHasReadLock(fileName) || !otherDeviceHasWriteLock(fileName)))
 				return ReturnCode.OTHER_DEVICE_HAS_LOCK; // prevents downloading file if other device has lock
 			
