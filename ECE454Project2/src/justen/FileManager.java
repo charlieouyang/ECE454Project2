@@ -165,8 +165,8 @@ public class FileManager implements Serializable {
 		}
 	}
 	
-	public boolean fileExists(String filename) {
-		return versionMap.containsKey(filename);
+	public boolean fileExists(String fileName) {
+		return localFiles.contains(fileName) || remoteFiles.contains(fileName);
 	}
 	
 	public void addRemoteFile(String fileName) {
