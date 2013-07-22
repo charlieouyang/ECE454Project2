@@ -73,7 +73,7 @@ public class FileOperations
 		
 		String properName = fileName.substring(0, fileName.indexOf("."));
 		String extension = fileName.substring(fileName.indexOf("."));
-		File file = new File(PropertiesOfPeer.folderPeerName + "\\" + properName + "_v1" + extension);
+		File file = new File(PropertiesOfPeer.folderPeerName + "\\" + properName + "_v0" + extension);
 		try {
 			file.createNewFile();
 		} catch (IOException e) {
