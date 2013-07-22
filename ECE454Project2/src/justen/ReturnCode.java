@@ -19,21 +19,21 @@ public final class ReturnCode {
 	
 	public static String getReturnCodeMeaning(int returnCode) {
 		if (returnCode == -1)
-			return "Incorrect open operation";
+			return "ERROR: Incorrect open operation";
 		else if (returnCode == -2)
-			return "File already exists";
+			return "ERROR: File already exists";
 		else if (returnCode == -3)
-			return "Another device has a lock on the file";
+			return "ERROR: Another device has a lock on the file";
 		else if (returnCode == -4)
-			return "Device containing file is offline";
+			return "ERROR: Device containing file is offline";
 		else if (returnCode == -5)
-			return "File does not exist";
+			return "ERROR: File does not exist";
 		else if (returnCode == -998)
-			return "Could not create file (???)";
+			return "ERROR: Could not create file (???)";
 		else if (returnCode == -999)
-			return "Go fuck yourself";
+			return "ERROR: Go fuck yourself";
 		else if (returnCode == 1)
-			return "File not open";
+			return "WARNING: File not open";
 		else
 			return "Invalid return code";
 //		else if (returnCode == )

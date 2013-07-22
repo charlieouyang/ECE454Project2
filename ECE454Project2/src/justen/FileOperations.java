@@ -67,7 +67,7 @@ public class FileOperations
 		return closeFile(fileName);
 	}
 	
-	public int create(String fileName) { //charlie.docx
+	public int create(String fileName) {
 		if (fm.fileExists(fileName))
 			return ReturnCode.FILE_ALREADY_EXISTS;
 		
@@ -81,7 +81,6 @@ public class FileOperations
 			return ReturnCode.COULD_NOT_CREATE_FILE;
 		}
 		
-		//TODO: Update the file manager
 		fm.addLocalFile(fileName);
 		PropertiesOfPeer.broadcastStatus();
 		return ReturnCode.SUCCESS;
