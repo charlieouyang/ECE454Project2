@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 import client.ClientStateManager;
-
+import client.ConnectionDispatcher;
+import client.ConnectionInstance;
 import justen.Status;
-
 import data.FileWrapper;
 import data.Message;
 import data.Message.MESSAGE_TYPE;
@@ -15,7 +15,7 @@ import data.PropertiesOfPeer;
 
 public class ServerDecipherMessageRepo {
 
-	public static Message DecipherMessageAndReturn(Message incomingMessage) {
+	public static Message DecipherMessageAndReturn(Message incomingMessage) throws Exception {
 
 		Message.MESSAGE_TYPE type = incomingMessage.getType();
 		Message returnMessage = null;
@@ -56,7 +56,17 @@ public class ServerDecipherMessageRepo {
 		}
 		
 		else if (type.equals(Message.MESSAGE_TYPE.STATUS_UPDATE)) {
+			String theirIpAddress = incomingMessage.getIpAddress();
+			int theirPortNumber = incomingMessage.getPortNumber();
+			
+			if (!PropertiesOfPeer.CheckIfThisHostIsStillAlive(theirIpAddress, theirPortNumber) && !PropertiesOfPeer.firstTimeStarting){
+				ConnectionInstance newConnectionInstance = new ConnectionInstance(theirIpAddress, theirPortNumber);
+				newConnectionInstance.start();
+				PropertiesOfPeer.AddEntryToIPAddrPortNumMappingAlive(theirIpAddress, theirPortNumber);
+			}
+			
 			PropertiesOfPeer.updateOtherPeersStatus(incomingMessage);
+			PropertiesOfPeer.firstTimeStarting = false;
 		}
 		else if (type.equals(Message.MESSAGE_TYPE.DELETEFILE)) {
 			//CALL DELETE ONE FILE

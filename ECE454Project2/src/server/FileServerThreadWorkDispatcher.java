@@ -70,6 +70,9 @@ public class FileServerThreadWorkDispatcher extends Thread {
 			System.out.println("Connection from client closed");
 		} catch (ClassNotFoundException e){
 			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
     }
     

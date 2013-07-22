@@ -74,7 +74,7 @@ public class ConnectionInstance extends Thread {
 				}
 				
 				if (PropertiesOfPeer.CheckIfThisHostIsStillAlive(ipAddress, portNumber) && !PropertiesOfPeer.peerUp){
-					Message closingMessage = new Message(ipAddress, portNumber, MESSAGE_TYPE.PEER_LEAVING, "shutting down connection!");
+					Message closingMessage = new Message(PropertiesOfPeer.ipAddress, PropertiesOfPeer.portNumber, MESSAGE_TYPE.PEER_LEAVING, "shutting down connection!");
 					oos.writeObject(closingMessage);
 				}
 				

@@ -101,8 +101,7 @@ public class FileOperations
 		}
 		
 		//TODO: Handle delete broadcast from another peer
-		
-		// PropertiesOfPeer.broadcastDeleteFile(fileName)
+		PropertiesOfPeer.deleteFileBroadcast(fileName);
 		PropertiesOfPeer.broadcastStatus();
 		return 0;
 	}
@@ -119,8 +118,10 @@ public class FileOperations
 				return -1;
 		}
 		fm.removeLocalFile(fileName, true);
+		
+		
 		//TODO: Handle delete broadcast from another peer
-		// PropertiesOfPeer.broadcastDeleteAllFileVersions(fileName)
+		PropertiesOfPeer.deleteFileAllVersionsBroadcast(fileName);
 		PropertiesOfPeer.broadcastStatus();
 		return 0;
 	}

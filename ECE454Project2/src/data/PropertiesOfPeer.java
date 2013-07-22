@@ -8,10 +8,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import client.ClientStateManager;
-
 import data.Message.MESSAGE_TYPE;
-
 import justen.FileManager;
+import justen.FileOperations;
 import justen.Status;
 
 public class PropertiesOfPeer {
@@ -21,6 +20,7 @@ public class PropertiesOfPeer {
 	public static String PeerName = ipAddress + ":" + portNumber;
 	public static String folderPeerName = ipAddress + "." + portNumber;
 	public static boolean peerUp = false;
+	public static boolean firstTimeStarting = true;
 	
 	public static ArrayList<Entry> ipAddrPortNumMappingAll = new ArrayList<Entry>();
 	public static ArrayList<Entry> ipAddrPortNumMappingAlive = new ArrayList<Entry>();
@@ -28,6 +28,7 @@ public class PropertiesOfPeer {
 	
 	//File Management
 	public static FileManager fileManager = new FileManager();
+	public static FileOperations fileOperations = new FileOperations(fileManager);
 	
 	public PropertiesOfPeer(){
 		//List of ip address to port number mappings

@@ -56,20 +56,40 @@ public class UserInputThread extends Thread {
 				}
 				
 				else if (input.equals("open")){
-					//open
-					//
 					if (PropertiesOfPeer.peerUp) {
 						
 						System.out.println("[** KEYBOARD INPUT **]	Please enter file name");  
-						String input2 = scanner.next(); 
+						String fileName = scanner.next(); 
+						System.out.println("[** KEYBOARD INPUT **]	Please enter file operation (r/w)");  
+						char operation = scanner.next().charAt(0); 
 						
-						Iterator<Entry> it = PropertiesOfPeer.ipAddrPortNumMappingAlive.iterator();
-						while (it.hasNext()) {
-							Entry entry = it.next();
-							
-							ClientStateManager.GetFileFromOtherPeer((String)entry.getKey() + ":" + 
-									Integer.toString((Integer)entry.getValue()), input2);
-						}
+						PropertiesOfPeer.fileOperations.open(fileName, operation);
+						
+					} else {
+						System.out.println("[** SYSTEM NOTIFICATION **]	System is shut down");
+					}
+				}
+				
+				else if (input.equals("close")){
+					if (PropertiesOfPeer.peerUp) {
+						
+						System.out.println("[** KEYBOARD INPUT **]	Please enter file name");  
+						String fileName = scanner.next(); 
+						
+						PropertiesOfPeer.fileOperations.close(fileName);
+						
+					} else {
+						System.out.println("[** SYSTEM NOTIFICATION **]	System is shut down");
+					}
+				}
+				
+				else if (input.equals("create")){
+					if (PropertiesOfPeer.peerUp) {
+						
+						System.out.println("[** KEYBOARD INPUT **]	Please enter new file name");  
+						String fileName = scanner.next(); 
+						
+						PropertiesOfPeer.fileOperations.create(fileName);
 						
 					} else {
 						System.out.println("[** SYSTEM NOTIFICATION **]	System is shut down");
@@ -77,22 +97,17 @@ public class UserInputThread extends Thread {
 				}
 				
 				else if (input.equals("delete")){
-					//open
-					//
 					if (PropertiesOfPeer.peerUp) {
 						
 						System.out.println("[** KEYBOARD INPUT **]	Please enter file name you want to delete");  
-						String input2 = scanner.next(); 
+						String fileName = scanner.next(); 
 						
 						//Call Pinto's delete method
+						PropertiesOfPeer.fileOperations.delete(fileName);
 						
 					} else {
 						System.out.println("[** SYSTEM NOTIFICATION **]	System is shut down");
 					}
-				}
-				
-				else if (input.equals("status")){
-					PropertiesOfPeer.broadcastStatus();
 				}
 			}
 		} catch (Exception e) {
