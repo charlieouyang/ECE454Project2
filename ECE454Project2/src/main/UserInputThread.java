@@ -1,14 +1,16 @@
 package main;
 
+import java.awt.List;
 import java.io.File;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Map.Entry;
 
 import client.ClientStateManager;
 import client.ConnectionDispatcher;
-
 import data.FileWrapper;
 import data.Message;
 import data.Message.MESSAGE_TYPE;
@@ -63,8 +65,10 @@ public class UserInputThread extends Thread {
 						System.out.println("[** KEYBOARD INPUT **]	Please enter file operation (r/w)");  
 						char operation = scanner.next().charAt(0); 
 						
-						PropertiesOfPeer.fileOperations.open(fileName, operation);
-						
+						int returnValue = PropertiesOfPeer.fileOperations.open(fileName, operation);
+						if (returnValue == -1){
+							System.out.println("[** SYSTEM NOTIFICATION **]	ERROR!");
+						}
 					} else {
 						System.out.println("[** SYSTEM NOTIFICATION **]	System is shut down");
 					}
@@ -76,7 +80,11 @@ public class UserInputThread extends Thread {
 						System.out.println("[** KEYBOARD INPUT **]	Please enter file name");  
 						String fileName = scanner.next(); 
 						
-						PropertiesOfPeer.fileOperations.close(fileName);
+						int returnValue = PropertiesOfPeer.fileOperations.close(fileName);
+						
+						if (returnValue == -1){
+							System.out.println("[** SYSTEM NOTIFICATION **]	ERROR!");
+						}
 						
 					} else {
 						System.out.println("[** SYSTEM NOTIFICATION **]	System is shut down");
@@ -89,7 +97,26 @@ public class UserInputThread extends Thread {
 						System.out.println("[** KEYBOARD INPUT **]	Please enter new file name");  
 						String fileName = scanner.next(); 
 						
-						PropertiesOfPeer.fileOperations.create(fileName);
+						int returnValue = PropertiesOfPeer.fileOperations.create(fileName);
+						
+						if (returnValue == -1){
+							System.out.println("[** SYSTEM NOTIFICATION **]	ERROR!");
+						}
+						
+					} else {
+						System.out.println("[** SYSTEM NOTIFICATION **]	System is shut down");
+					}
+				}
+				
+				else if (input.equals("view")){
+					if (PropertiesOfPeer.peerUp) {
+						ArrayList<String> output = PropertiesOfPeer.fileManager.getLogicalView();
+						String outputString = "";
+						for (String fileName : output){
+							outputString += fileName + "\n";
+						}
+
+						System.out.println(outputString);
 						
 					} else {
 						System.out.println("[** SYSTEM NOTIFICATION **]	System is shut down");

@@ -47,8 +47,8 @@ public class FileManager implements Serializable {
 		return versionMap;
 	}
 	
-	public HashSet<String> getLogicalView() {
-		HashSet<String> allFiles = new HashSet<String>();
+	public ArrayList<String> getLogicalView() {
+		ArrayList<String> allFiles = new ArrayList<String>();
 		for (Entry<String, ArrayList<Integer>> e : versionMap.entrySet()) {
 			String fileName = e.getKey();
 			ArrayList<Integer> temp = e.getValue();
