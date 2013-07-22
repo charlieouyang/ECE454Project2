@@ -150,12 +150,16 @@ public class FileManager implements Serializable {
 			int v = fileName.lastIndexOf("_") + 2; // 13
 			String vNum = fileName.substring(v, fileName.lastIndexOf("."));
 			int versionNumber = Integer.parseInt(vNum);
-			if (versionMap.get(fileName).size() >= versionNumber)
-				versionMap.get(fileName).set(versionNumber, 0);
+			
+			String fileNameProper = fileName.substring(0, fileName.indexOf("_"));
+			String extension = fileName.substring(fileName.lastIndexOf("."));
+			
+			if (versionMap.get(fileNameProper + extension).size() >= versionNumber)
+				versionMap.get(fileNameProper + extension).set(versionNumber, null);
 			
 			boolean allGone = true;
-			for (int i = 0; i < versionMap.get(fileName).size(); i++) {
-				if (versionMap.get(fileName).get(i) == 1)
+			for (int i = 0; i < versionMap.get(fileNameProper + extension).size(); i++) {
+				if (versionMap.get(fileNameProper + extension).get(i) == 1)
 				{
 					allGone = false;
 					break;

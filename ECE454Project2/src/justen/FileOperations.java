@@ -96,7 +96,11 @@ public class FileOperations
 		int v = fileName.lastIndexOf("_") + 2; 
 		String vNum = fileName.substring(v, fileName.lastIndexOf("."));
 		int versionNumber = Integer.parseInt(vNum);
-		if (fm.containsFileLocally(fileName, versionNumber)) {
+		
+		String fileNameProper = fileName.substring(0, fileName.indexOf("_"));
+		String extension = fileName.substring(fileName.lastIndexOf("."));
+		
+		if (fm.containsFileLocally(fileNameProper + extension, versionNumber)) {
 			// delete file
 			fm.removeLocalFile(fileName, false);
 		}
