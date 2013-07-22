@@ -16,7 +16,7 @@ public class FileOperations
 	}
 	
 	public int open(String fileName, char operation) {
-		if (operation != 'r' || operation != 'w')
+		if (operation != 'r' && operation != 'w')
 			return ReturnCode.INCORRECT_OPERATION;
 		
 		if (!fm.fileExists(fileName))

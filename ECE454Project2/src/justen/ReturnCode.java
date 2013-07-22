@@ -16,4 +16,33 @@ public final class ReturnCode {
 	
 	// WARNINGS
 	public static final int FILE_NOT_OPEN = 1;
+	
+	public static String getReturnCodeMeaning(int returnCode) {
+		if (returnCode == -1)
+			return "Incorrect open operation";
+		else if (returnCode == -2)
+			return "File already exists";
+		else if (returnCode == -3)
+			return "Another device has a lock on the file";
+		else if (returnCode == -4)
+			return "Device containing file is offline";
+		else if (returnCode == -5)
+			return "File does not exist";
+		else if (returnCode == -998)
+			return "Could not create file (???)";
+		else if (returnCode == -999)
+			return "Go fuck yourself";
+		else if (returnCode == 1)
+			return "File not open";
+		else
+			return "Invalid return code";
+//		else if (returnCode == )
+//			return "";
+//		else if (returnCode == )
+//			return "";
+//		
+//
+//		else if (returnCode == )
+//			return "";
+	}
 }
