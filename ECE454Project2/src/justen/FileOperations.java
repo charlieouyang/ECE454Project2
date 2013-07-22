@@ -178,11 +178,13 @@ public class FileOperations
 		if (operation == 'r') {
 			fm.setLock(fileName, ReaderLock.getInstance());
 		}
-		if (operation == 'w') {
+		else if (operation == 'w') {
 			if (otherDeviceHasReadLock(fileName))
 				return false;
 			fm.setLock(fileName, WriterLock.getInstance());
 		}
+		else
+			return false;
 		fm.openFile(fileName);
 		return true;
 	}
