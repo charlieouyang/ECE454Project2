@@ -82,7 +82,7 @@ public class FileManager implements Serializable {
 		return null;
 	}
 	
-	public void addLocalFile(String fileName) {
+	public void addLocalFile(String fileName) { // charlie!!
 		localFiles.add(fileName);
 		ArrayList<Integer> bitString = new ArrayList<Integer>();
 		bitString.add(1);
