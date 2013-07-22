@@ -52,6 +52,7 @@ public class ConnectionInstance extends Thread {
 						socket.getOutputStream());
 				
 				PropertiesOfPeer.ipAddrPortNumMappingAlive.add(new MyEntry<String, Integer>(ipAddress, portNumber));
+				PropertiesOfPeer.broadcastStatus();
 				
 				while (stillTryingToConnect){
 					stillTryingToConnect = PropertiesOfPeer.peerUp;

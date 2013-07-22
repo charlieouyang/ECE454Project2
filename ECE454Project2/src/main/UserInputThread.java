@@ -55,7 +55,9 @@ public class UserInputThread extends Thread {
 					}
 				}
 				
-				else if (input.equals("request")){
+				else if (input.equals("open")){
+					//open
+					//
 					if (PropertiesOfPeer.peerUp) {
 						
 						System.out.println("[** KEYBOARD INPUT **]	Please enter file name");  

@@ -80,6 +80,8 @@ public class FileOperations
 			e.printStackTrace();
 			return -1;
 		}
+		
+		//TODO: Update the file manager
 		PropertiesOfPeer.broadcastStatus();
 		return 0;
 	}
@@ -97,7 +99,11 @@ public class FileOperations
 			// delete file
 			fm.removeLocalFile(fileName, false);
 		}
+		
+		//TODO: Handle delete broadcast from another peer
+		
 		// PropertiesOfPeer.broadcastDeleteFile(fileName)
+		PropertiesOfPeer.broadcastStatus();
 		return 0;
 	}
 	
@@ -113,8 +119,9 @@ public class FileOperations
 				return -1;
 		}
 		fm.removeLocalFile(fileName, true);
-		
+		//TODO: Handle delete broadcast from another peer
 		// PropertiesOfPeer.broadcastDeleteAllFileVersions(fileName)
+		PropertiesOfPeer.broadcastStatus();
 		return 0;
 	}
 	
