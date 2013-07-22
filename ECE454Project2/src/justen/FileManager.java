@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 
-public class FileManager implements Serializable{
+public class FileManager implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private HashSet<String> localFiles;
 	private HashSet<String> remoteFiles;
 	private HashSet<String> openFiles;
@@ -47,7 +48,6 @@ public class FileManager implements Serializable{
 	}
 	
 	public HashSet<String> getLogicalView() {
-		// TODO: build logical view
 		HashSet<String> allFiles = new HashSet<String>();
 		for (Entry<String, ArrayList<Integer>> e : versionMap.entrySet()) {
 			String fileName = e.getKey();
@@ -138,8 +138,9 @@ public class FileManager implements Serializable{
 			return false;
 		if (allVersions) {
 			localFiles.remove(fileName);
-			for (int i = 0; i < versionMap.get(fileName).size(); i++)
-				versionMap.get(fileName).set(i, 0);
+//			for (int i = 0; i < versionMap.get(fileName).size(); i++)
+//				versionMap.get(fileName).set(i, 0);
+			versionMap.remove(fileName);
 			return true;
 		}
 		else {
