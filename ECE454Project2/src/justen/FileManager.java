@@ -48,10 +48,17 @@ public class FileManager implements Serializable{
 	
 	public HashSet<String> getLogicalView() {
 		// TODO: build logical view
+		HashSet<String> allFiles = new HashSet<String>();
 		for (Entry<String, ArrayList<Integer>> e : versionMap.entrySet()) {
-			
+			String fileName = e.getKey();
+			ArrayList<Integer> temp = e.getValue();
+			String properName = fileName.substring(0, fileName.lastIndexOf("."));
+			String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+			for (int i = 0; i < temp.size(); i++) {
+				allFiles.add(properName + "_v" + i + "." + extension);
+			}
 		}
-		return null;
+		return allFiles;
 	}
 	
 	public HashMap<String, Lock> getLockMap() {
