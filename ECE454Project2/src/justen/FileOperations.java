@@ -131,7 +131,6 @@ public class FileOperations
 				fm.closeFile(fileName);
 			}
 			else if (fm.getLockMap().get(fileName) instanceof WriterLock) {
-				int versionNumber = FileManager.getVersionNumberFromFile(fileName);
 				fm.getLockMap().put(fileName, null);
 				fm.closeFile(fileName);
 				fm.saveNewFileVersion(FileManager.getProperName(fileName));

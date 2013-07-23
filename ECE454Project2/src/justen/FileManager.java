@@ -123,36 +123,42 @@ public class FileManager implements Serializable {
 		}
 	}
 	
-	private void processVersionMap(HashMap<String, ArrayList<Integer>> map) {
-		
-		for(String file : map.keySet()) { // all files other peer sees
-			// file = charlie.pdf
-			
-			
-			if (versionMap.containsKey(file)) { // i know of this file
-				
-			}
-		}
-		
-		for (String file : map.keySet()) {
-			if (!localFiles.contains(file) && !remoteFiles.contains(file)) {
-				// we have the file, check versions
-				ArrayList<Integer> remoteBitString = map.get(file);
-				ArrayList<Integer> localBitString = versionMap.get(file);
-				if (remoteBitString.size() > localBitString.size()) {
-					// new version
-					int j = localBitString.size();
-					localBitString.ensureCapacity(remoteBitString.size());
-					for (int i = j; i < localBitString.size(); i++) {
-						localBitString.set(i, 0);
+	private void processVersionMap(HashMap<String, ArrayList<Integer>> map) {	
+		for (Entry<String, ArrayList<Integer>> e : map.entrySet()) {
+			ArrayList<String> temp = getAllFilesForMapIndex(e.getKey(), e.getValue());
+			for (String file : temp) {
+				if (!localFiles.contains(file) && !remoteFiles.contains(file)) {
+					// no knowledge of this file
+					remoteFiles.add(file);
+					String properName = getProperName(file);
+					int vNum = getVersionNumberFromFile(file);
+					
+					if (!versionMap.containsKey(file)) {
+						ArrayList<Integer> bitString = new ArrayList<Integer>(vNum);
+						for (int i = 0; i < vNum; i++) 
+							bitString.add(0);
+						versionMap.put(e.getKey(), bitString);
 					}
-					versionMap.put(file, localBitString);
+					else if (vNum > versionMap.get(properName).size()) {
+						int j = versionMap.get(properName).size();
+						versionMap.get(properName).ensureCapacity(vNum);
+						for (int i = j; i <= vNum; i++) 
+							versionMap.get(properName).add(0);
+					} 
+					else 
+						versionMap.get(properName).set(vNum, 0);
 				}
 			}
-			else
-			{
-			}
 		}
+	}
+	
+	private ArrayList<String> getAllFilesForMapIndex(String fileName, ArrayList<Integer> bitString) {
+		ArrayList<String> temp = new ArrayList<String>();
+		String properName = fileName.substring(0, fileName.lastIndexOf("."));
+		String extension = fileName.substring(fileName.lastIndexOf("."));
+		for (int i = 0; i < bitString.size(); i++) 
+			temp.add(properName + "_v" + i + extension);
+		return temp;
 	}
 	
 	public boolean saveNewFileVersion(String fileName) { // fileName = test1.pdf
