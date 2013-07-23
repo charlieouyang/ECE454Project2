@@ -158,7 +158,7 @@ public class FileManager implements Serializable {
 			return false;
 
 		ArrayList<Integer> temp = versionMap.get(fileName); // test1.pdf=[0,0,1,1]
-		if (temp.size() >= versionNum) // shouldn't happen
+		if (temp.size() > versionNum) // shouldn't happen
 			temp.set(versionNum, 1);
 		else // higher version num
 			temp.add(1); // assume that there is time between new file saves

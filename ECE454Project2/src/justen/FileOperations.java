@@ -134,7 +134,7 @@ public class FileOperations
 				int versionNumber = FileManager.getVersionNumberFromFile(fileName);
 				fm.getLockMap().put(fileName, null);
 				fm.closeFile(fileName);
-				fm.saveNewFileVersion(fileName, versionNumber + 1);
+				fm.saveNewFileVersion(FileManager.getProperName(fileName), versionNumber + 1);
 			}
 			else // lock was null wtf?
 				return ReturnCode.GO_FUCK_YOURSELF;
