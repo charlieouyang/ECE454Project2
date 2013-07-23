@@ -103,7 +103,7 @@ public class FileOperations
 	}
 	
 	public int deleteAll(String fileName) { // fileName = test1.pdf
-		if (fm.fileExistsInVersionMap(fileName))
+		if (!fm.fileExistsInVersionMap(fileName))
 			return ReturnCode.FILE_DOES_NOT_EXIST;
 		
 		int numVersions = fm.getVersionMap().get(fileName).size();
@@ -112,7 +112,7 @@ public class FileOperations
 		for (int i = 0; i < numVersions; i++) {
 			if (anyDeviceHasLockOnFile(properName, extension, i))
 				return ReturnCode.OTHER_DEVICE_HAS_LOCK;
-			else if (fm.getLockType(fileName) != null)
+			else if (fm.getLockType(properName + "_v" + i + "." + extension) != null)
 				return ReturnCode.FILE_LOCKED;
 		}
 		
@@ -134,7 +134,7 @@ public class FileOperations
 				int versionNumber = FileManager.getVersionNumberFromFile(fileName);
 				fm.getLockMap().put(fileName, null);
 				fm.closeFile(fileName);
-				fm.saveNewFileVersion(FileManager.getProperName(fileName), versionNumber + 1);
+				fm.saveNewFileVersion(FileManager.getProperName(fileName));
 			}
 			else // lock was null wtf?
 				return ReturnCode.GO_FUCK_YOURSELF;
@@ -147,6 +147,8 @@ public class FileOperations
 	private String getDeviceForFile(String fileName, int versionNumber) {
 		for (Entry<String, Status> e : PropertiesOfPeer.deviceAndStatusMap.entrySet()) {
 			Status s = e.getValue();
+			if (s == null)
+				continue;
 			if (s.fileVersionMap.containsKey(fileName)) {
 				if (s.fileVersionMap.get(fileName).get(versionNumber) == 1)
 					return e.getKey();
@@ -158,6 +160,8 @@ public class FileOperations
 	private boolean anyDeviceHasLockOnFile(String properFileName, String extension, int versionNumber) {
 		for (Entry<String, Status> e : PropertiesOfPeer.deviceAndStatusMap.entrySet()) {
 			Status s = e.getValue();
+			if (s == null)
+				continue;
 			if (s.lockMap.containsKey(properFileName + "_v" + versionNumber + "." + extension)) {
 				if (s.lockMap.get(properFileName + "_v" + versionNumber + "." + extension) != null)
 					return true;

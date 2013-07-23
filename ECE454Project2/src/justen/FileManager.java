@@ -79,6 +79,8 @@ public class FileManager implements Serializable {
 			String properName = fileName.substring(0, fileName.lastIndexOf("."));
 			String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
 			for (int i = 0; i < temp.size(); i++) {
+				if (temp.get(i) == null) 
+					continue;
 				allFiles.add(properName + "_v" + i + "." + extension);
 			}
 		}
@@ -153,16 +155,14 @@ public class FileManager implements Serializable {
 		}
 	}
 	
-	public boolean saveNewFileVersion(String fileName, int versionNum) { // fileName = test1.pdf
+	public boolean saveNewFileVersion(String fileName) { // fileName = test1.pdf
 		if (!versionMap.containsKey(fileName)) // should be create
 			return false;
 
-		ArrayList<Integer> temp = versionMap.get(fileName); // test1.pdf=[0,0,1,1]
-		if (temp.size() > versionNum) // shouldn't happen
-			temp.set(versionNum, 1);
-		else // higher version num
-			temp.add(1); // assume that there is time between new file saves
-		versionMap.put(fileName, temp);
+		versionMap.get(fileName).add(1);
+		String properName = fileName.substring(0, fileName.lastIndexOf("."));
+		String extension = fileName.substring(fileName.lastIndexOf("."));
+		localFiles.add(properName + "_v" + (versionMap.get(fileName).size() - 1) + extension);
 		return true;
 	}
 	
