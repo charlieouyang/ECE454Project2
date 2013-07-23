@@ -20,7 +20,7 @@ public class FileManager implements Serializable {
 	private HashSet<String> remoteFiles;
 	private HashSet<String> openFiles;
 	private Hashtable<String, ArrayList<Integer>> versionMap;
-	private HashMap<String, Lock> lockMap;
+	private Hashtable<String, Lock> lockMap;
 	
 	private final Object lock = new Object();
 	
@@ -29,7 +29,7 @@ public class FileManager implements Serializable {
 		remoteFiles = new HashSet<String>();
 		openFiles = new HashSet<String>();
 		versionMap = new Hashtable<String, ArrayList<Integer>>();
-		lockMap = new HashMap<String, Lock>();
+		lockMap = new Hashtable<String, Lock>();
 	}
 	
 	/*
@@ -88,7 +88,7 @@ public class FileManager implements Serializable {
 		return allFiles;
 	}
 	
-	public HashMap<String, Lock> getLockMap() {
+	public Hashtable<String, Lock> getLockMap() {
 		return lockMap;
 	}
 	

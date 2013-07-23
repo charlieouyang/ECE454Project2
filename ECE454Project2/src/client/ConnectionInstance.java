@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import justen.Lock;
 import justen.Status;
 
 import data.Message;
@@ -75,7 +76,6 @@ public class ConnectionInstance extends Thread {
 								Status status = (Status) sendingMessage.getData();
 								Hashtable<String, ArrayList<Integer>> versionMap = status.fileVersionMap;
 								Hashtable<String, ArrayList<Integer>> tempVersionMap = new Hashtable<String, ArrayList<Integer>>();
-								
 								Iterator<Map.Entry<String, ArrayList<Integer>>> it = versionMap.entrySet().iterator();
 								while (it.hasNext()) {
 									Map.Entry<String, ArrayList<Integer>> entry = it.next();	
@@ -83,6 +83,14 @@ public class ConnectionInstance extends Thread {
 								}
 								status.fileVersionMap = tempVersionMap;
 								
+								Hashtable<String, Lock> oldLockMap = status.lockMap;
+								Hashtable<String, Lock> tempLockMap = new Hashtable<String, Lock>();
+								Iterator<Map.Entry<String, Lock>> it2 = oldLockMap.entrySet().iterator();
+								while (it.hasNext()) {
+									Map.Entry<String, Lock> entry = it2.next();	
+									tempLockMap.put(entry.getKey(), entry.getValue());
+								}
+								status.lockMap = tempLockMap;
 								
 								sendingMessage = new Message(PropertiesOfPeer.ipAddress, PropertiesOfPeer.portNumber, MESSAGE_TYPE.STATUS_UPDATE, status);
 							}
