@@ -2,7 +2,10 @@ package client;
 
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import justen.Status;
@@ -67,6 +70,23 @@ public class ConnectionInstance extends Thread {
 						//When we determine there's a new message that this peer needs to send to another peer
 						if (ClientStateManager.NewMessageToSendForPeer(ipAddress + ":" + Integer.toString(portNumber))){
 							Message sendingMessage = ClientStateManager.RetrieveMessageForPeer(ipAddress + ":" +  Integer.toString(portNumber));
+							
+							if (sendingMessage.getType() == MESSAGE_TYPE.STATUS_UPDATE){
+								Status status = (Status) sendingMessage.getData();
+								Hashtable<String, ArrayList<Integer>> versionMap = status.fileVersionMap;
+								Hashtable<String, ArrayList<Integer>> tempVersionMap = new Hashtable<String, ArrayList<Integer>>();
+								
+								Iterator<Map.Entry<String, ArrayList<Integer>>> it = versionMap.entrySet().iterator();
+								while (it.hasNext()) {
+									Map.Entry<String, ArrayList<Integer>> entry = it.next();	
+									tempVersionMap.put(entry.getKey(), entry.getValue());
+								}
+								status.fileVersionMap = tempVersionMap;
+								
+								
+								sendingMessage = new Message(PropertiesOfPeer.ipAddress, PropertiesOfPeer.portNumber, MESSAGE_TYPE.STATUS_UPDATE, status);
+							}
+														
 							oos.writeObject(sendingMessage);
 						}
 					}
