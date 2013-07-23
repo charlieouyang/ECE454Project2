@@ -109,6 +109,10 @@ public class FileManager implements Serializable {
 		return null;
 	}
 	
+	public void removeLock(String fileName) {
+		lockMap.remove(fileName);
+	}
+	
 	public void createNewFile(String fileName) { // fileName = test1.pdf
 		String properName = fileName.substring(0, fileName.lastIndexOf("."));
 		String extension = fileName.substring(fileName.lastIndexOf(".") + 1);

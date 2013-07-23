@@ -90,7 +90,7 @@ public class FileOperations
 			return ReturnCode.FILE_DOES_NOT_EXIST;
 		if (otherDeviceHasReadLock(fileName) || otherDeviceHasWriteLock(fileName))
 			return ReturnCode.OTHER_DEVICE_HAS_LOCK;
-		if (!(fm.getLockType(fileName) instanceof NoLock)) 
+		if (fm.getLockType(fileName) != null) 
 			return ReturnCode.FILE_LOCKED;
 		
 		if (fm.containsFileLocally(fileName)) { 
@@ -112,7 +112,7 @@ public class FileOperations
 		for (int i = 0; i < numVersions; i++) {
 			if (anyDeviceHasLockOnFile(properName, extension, i))
 				return ReturnCode.OTHER_DEVICE_HAS_LOCK;
-			else if (!(fm.getLockType(properName + "_v" + i + "." + extension) instanceof NoLock))
+			else if (fm.getLockType(properName + "_v" + i + "." + extension) != null)
 				return ReturnCode.FILE_LOCKED;
 		}
 		
@@ -127,11 +127,11 @@ public class FileOperations
 			return ReturnCode.FILE_DOES_NOT_EXIST;
 		else {
 			if (fm.getLockMap().get(fileName) instanceof ReaderLock) {
-				fm.getLockMap().put(fileName, NoLock.getInstance());
+				fm.removeLock(fileName);
 				fm.closeFile(fileName);
 			}
 			else if (fm.getLockMap().get(fileName) instanceof WriterLock) {
-				fm.getLockMap().put(fileName, NoLock.getInstance());
+				fm.removeLock(fileName);
 				fm.closeFile(fileName);
 				fm.saveNewFileVersion(FileManager.getProperName(fileName));
 			}
@@ -162,7 +162,7 @@ public class FileOperations
 			if (s == null)
 				continue;
 			if (s.lockMap.containsKey(properFileName + "_v" + versionNumber + "." + extension)) {
-				if (!(s.lockMap.get(properFileName + "_v" + versionNumber + "." + extension) instanceof NoLock))
+				if (s.lockMap.get(properFileName + "_v" + versionNumber + "." + extension) != null)
 					return true;
 			}
 		}
