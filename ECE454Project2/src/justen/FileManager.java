@@ -1,10 +1,17 @@
 package justen;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
+
+import data.PropertiesOfPeer;
 
 public class FileManager implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -163,6 +170,14 @@ public class FileManager implements Serializable {
 		if (!localFiles.contains(fileName))
 			return false;
 		
+		String path = new File(PropertiesOfPeer.folderPeerName + "\\" + fileName).getAbsolutePath();
+		try {
+			Files.delete(Paths.get(path));
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
 		int vNum = getVersionNumberFromFile(fileName);
 		
 		// ok we have file, let's remove from local and from version map
@@ -174,6 +189,7 @@ public class FileManager implements Serializable {
 			versionMap.put(getProperName(fileName), temp);
 		else
 			versionMap.remove(getProperName(fileName));
+		
 		return true;
 	}
 	
