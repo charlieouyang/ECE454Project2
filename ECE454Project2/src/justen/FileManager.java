@@ -68,6 +68,10 @@ public class FileManager implements Serializable {
 		return versionMap;
 	}
 	
+	public void addLocalFile(String fileName) {
+		localFiles.add(fileName);
+	}
+	
 	public boolean fileExistsInVersionMap(String fileName) {// fileName = test1.pdf
 		return versionMap.containsKey(fileName);
 	}
@@ -170,7 +174,9 @@ public class FileManager implements Serializable {
 		if (!versionMap.containsKey(fileName)) // should be create
 			return false;
 
-		versionMap.get(fileName).add(1);
+		ArrayList<Integer> temp = versionMap.get(fileName);
+		temp.add(1);
+		versionMap.put(fileName, temp);
 		String properName = fileName.substring(0, fileName.lastIndexOf("."));
 		String extension = fileName.substring(fileName.lastIndexOf("."));
 		localFiles.add(properName + "_v" + (versionMap.get(fileName).size() - 1) + extension);

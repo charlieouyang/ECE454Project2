@@ -41,8 +41,10 @@ public class FileOperations
 				return ReturnCode.HOST_NOT_ALIVE;
 			
 			ClientStateManager.GetFileFromOtherPeer(device, fileName);
-			if (openFile(fileName, operation))
+			if (openFile(fileName, operation)) {
+				fm.addLocalFile(fileName);
 				PropertiesOfPeer.broadcastStatus();
+			}
 			else
 				return ReturnCode.OTHER_DEVICE_HAS_LOCK;
 			
