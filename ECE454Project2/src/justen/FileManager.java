@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Map.Entry;
 
 import data.PropertiesOfPeer;
@@ -18,7 +19,7 @@ public class FileManager implements Serializable {
 	private HashSet<String> localFiles;
 	private HashSet<String> remoteFiles;
 	private HashSet<String> openFiles;
-	private HashMap<String, ArrayList<Integer>> versionMap;
+	private Hashtable<String, ArrayList<Integer>> versionMap;
 	private HashMap<String, Lock> lockMap;
 	
 	private final Object lock = new Object();
@@ -27,7 +28,7 @@ public class FileManager implements Serializable {
 		localFiles = new HashSet<String>();
 		remoteFiles = new HashSet<String>();
 		openFiles = new HashSet<String>();
-		versionMap = new HashMap<String, ArrayList<Integer>>();
+		versionMap = new Hashtable<String, ArrayList<Integer>>();
 		lockMap = new HashMap<String, Lock>();
 	}
 	
@@ -63,7 +64,7 @@ public class FileManager implements Serializable {
 		openFiles.remove(fileName);
 	}
 	
-	public HashMap<String, ArrayList<Integer>> getVersionMap() {
+	public Hashtable<String, ArrayList<Integer>> getVersionMap() {
 		return versionMap;
 	}
 	
@@ -123,7 +124,7 @@ public class FileManager implements Serializable {
 		}
 	}
 	
-	private void processVersionMap(HashMap<String, ArrayList<Integer>> map) {	
+	private void processVersionMap(Hashtable<String, ArrayList<Integer>> map) {	
 		for (Entry<String, ArrayList<Integer>> e : map.entrySet()) {
 			ArrayList<String> temp = getAllFilesForMapIndex(e.getKey(), e.getValue());
 			for (String file : temp) {

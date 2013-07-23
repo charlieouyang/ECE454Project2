@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import justen.Status;
+
 import data.Message;
 import data.Message.MESSAGE_TYPE;
 import data.PropertiesOfPeer;

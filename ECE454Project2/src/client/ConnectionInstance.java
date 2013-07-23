@@ -5,6 +5,8 @@ import java.net.Socket;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+import justen.Status;
+
 import data.Message;
 import data.Message.MESSAGE_TYPE;
 import data.MyEntry;
