@@ -86,7 +86,7 @@ public class ConnectionInstance extends Thread {
 								Hashtable<String, Lock> oldLockMap = status.lockMap;
 								Hashtable<String, Lock> tempLockMap = new Hashtable<String, Lock>();
 								Iterator<Map.Entry<String, Lock>> it2 = oldLockMap.entrySet().iterator();
-								while (it.hasNext()) {
+								while (it2.hasNext()) {
 									Map.Entry<String, Lock> entry = it2.next();	
 									tempLockMap.put(entry.getKey(), entry.getValue());
 								}

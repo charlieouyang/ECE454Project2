@@ -136,7 +136,7 @@ public class FileManager implements Serializable {
 					
 					if (!versionMap.containsKey(file)) {
 						ArrayList<Integer> bitString = new ArrayList<Integer>(vNum);
-						for (int i = 0; i < vNum; i++) 
+						for (int i = 0; i <= vNum; i++) 
 							bitString.add(0);
 						versionMap.put(e.getKey(), bitString);
 					}

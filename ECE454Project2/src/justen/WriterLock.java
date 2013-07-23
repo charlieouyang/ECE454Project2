@@ -1,6 +1,12 @@
 package justen;
 
-public final class WriterLock extends Lock {
+import java.io.Serializable;
+
+public final class WriterLock extends Lock implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static WriterLock instance = null;
 	
 	protected WriterLock() {
