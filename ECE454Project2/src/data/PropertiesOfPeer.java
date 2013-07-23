@@ -124,7 +124,7 @@ public class PropertiesOfPeer {
 		Iterator<Entry> it = ipAddrPortNumMappingAlive.iterator();
 		while (it.hasNext()) {
 			Entry entry = it.next();
-			Message statusBroadcastMessage = new Message(ipAddress, portNumber, MESSAGE_TYPE.STATUS_UPDATE, getCurrentStatus());
+			Message statusBroadcastMessage = new Message(PropertiesOfPeer.ipAddress, PropertiesOfPeer.portNumber, MESSAGE_TYPE.STATUS_UPDATE, getCurrentStatus());
 			ClientStateManager.AddNewMessageToQueue((String)entry.getKey() + ":" + Integer.toString((Integer)entry.getValue()), statusBroadcastMessage);
 		}
 	}
@@ -137,7 +137,7 @@ public class PropertiesOfPeer {
 		Iterator<Entry> it = ipAddrPortNumMappingAlive.iterator();
 		while (it.hasNext()) {
 			Entry entry = it.next();
-			Message deleteFileBroadcastMessage = new Message(ipAddress, portNumber, MESSAGE_TYPE.DELETEFILE, fileName);
+			Message deleteFileBroadcastMessage = new Message(PropertiesOfPeer.ipAddress, PropertiesOfPeer.portNumber, MESSAGE_TYPE.DELETEFILE, fileName);
 			ClientStateManager.AddNewMessageToQueue((String)entry.getKey() + ":" + Integer.toString((Integer)entry.getValue()), deleteFileBroadcastMessage);
 		}
 	}
@@ -146,7 +146,16 @@ public class PropertiesOfPeer {
 		Iterator<Entry> it = ipAddrPortNumMappingAlive.iterator();
 		while (it.hasNext()) {
 			Entry entry = it.next();
-			Message deleteFileBroadcastMessage = new Message(ipAddress, portNumber, MESSAGE_TYPE.DELETEALLVERSIONSOFFILE, fileName);
+			Message deleteFileBroadcastMessage = new Message(PropertiesOfPeer.ipAddress, PropertiesOfPeer.portNumber, MESSAGE_TYPE.DELETEALLVERSIONSOFFILE, fileName);
+			ClientStateManager.AddNewMessageToQueue((String)entry.getKey() + ":" + Integer.toString((Integer)entry.getValue()), deleteFileBroadcastMessage);
+		}
+	}
+	
+	public static void addNewDeviceBroadcast(String device){
+		Iterator<Entry> it = ipAddrPortNumMappingAlive.iterator();
+		while (it.hasNext()) {
+			Entry entry = it.next();
+			Message deleteFileBroadcastMessage = new Message(PropertiesOfPeer.ipAddress, PropertiesOfPeer.portNumber, MESSAGE_TYPE.ADDNEWDEVICE, device);
 			ClientStateManager.AddNewMessageToQueue((String)entry.getKey() + ":" + Integer.toString((Integer)entry.getValue()), deleteFileBroadcastMessage);
 		}
 	}

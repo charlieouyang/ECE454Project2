@@ -1,9 +1,13 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Scanner;
+
 import justen.ReturnCode;
 import client.ConnectionDispatcher;
+import client.ConnectionInstance;
+import data.MyEntry;
 import data.PropertiesOfPeer;
 import server.FileServer;
 
@@ -46,13 +50,21 @@ public class UserInputThread extends Thread {
 						System.out.println("[** SYSTEM NOTIFICATION **]	System is already up");
 					}
 				}
-
+				else if (input.equals("adddevice")){
+					System.out.println("[** KEYBOARD INPUT **]	Please enter valid host name");  
+					String input1 = scanner.next(); 
+					System.out.println("[** KEYBOARD INPUT **]	Please enter valid port number");  
+					String input2 = scanner.next(); 
+					
+					Map.Entry<String, Integer> entry1 = new MyEntry<String, Integer>(input1, Integer.parseInt(input2));
+					PropertiesOfPeer.ipAddrPortNumMappingAll.add(entry1);
+					ConnectionInstance connection = new ConnectionInstance(input1, Integer.parseInt(input2));
+					connection.start();
+					
+					PropertiesOfPeer.addNewDeviceBroadcast(input1 + ":" + input2);
+				}
 				else if (input.equals("open")) {
-//					System.out
-//							.println("[** KEYBOARD INPUT **]	Please enter file name");
 					String fileName = scanner.next();
-//					System.out
-//							.println("[** KEYBOARD INPUT **]	Please enter file operation (r/w)");
 					char operation = scanner.next().charAt(0);
 
 					int returnValue = PropertiesOfPeer.fileOperations.open(
@@ -66,8 +78,6 @@ public class UserInputThread extends Thread {
 				}
 
 				else if (input.equals("close")) {
-//					System.out
-//							.println("[** KEYBOARD INPUT **]	Please enter file name");
 					String fileName = scanner.next();
 
 					int returnValue = PropertiesOfPeer.fileOperations
@@ -82,7 +92,6 @@ public class UserInputThread extends Thread {
 				}
 
 				else if (input.equals("create")) {
-//					System.out.println("[** KEYBOARD INPUT **]	Please enter new file name");
 					String fileName = scanner.next();
 
 					int returnValue = PropertiesOfPeer.fileOperations.create(fileName);

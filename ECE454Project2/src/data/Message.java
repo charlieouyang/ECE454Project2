@@ -11,6 +11,8 @@ public class Message implements Serializable {
 		FILE,
 		DELETEFILE,
 		DELETEALLVERSIONSOFFILE,
+		RETIREDEVICE,
+		ADDNEWDEVICE,
 		TEST
 	}
 	

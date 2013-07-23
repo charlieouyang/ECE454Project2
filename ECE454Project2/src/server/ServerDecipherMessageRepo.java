@@ -3,6 +3,7 @@ package server;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Map;
 
 import client.ClientStateManager;
 import client.ConnectionDispatcher;
@@ -10,6 +11,7 @@ import client.ConnectionInstance;
 import justen.Status;
 import data.FileWrapper;
 import data.Message;
+import data.MyEntry;
 import data.Message.MESSAGE_TYPE;
 import data.PropertiesOfPeer;
 
@@ -80,19 +82,20 @@ public class ServerDecipherMessageRepo {
 			String fileName = (String) incomingMessage.getData();
 			PropertiesOfPeer.fileManager.deleteAllVersionsOfFile(fileName);
 		}
+		else if (type.equals(Message.MESSAGE_TYPE.ADDNEWDEVICE)) {
+			String deviceName = (String) incomingMessage.getData();
+			String hostName = deviceName.substring(0, deviceName.indexOf(':'));
+			int portNumber = Integer.parseInt(deviceName.substring(deviceName.indexOf(':') + 1, deviceName.length()));
+			Map.Entry<String, Integer> entry1 = new MyEntry<String, Integer>(hostName, portNumber);
+			PropertiesOfPeer.ipAddrPortNumMappingAll.add(entry1);
+			ConnectionInstance connection = new ConnectionInstance(hostName, portNumber);
+			connection.start();
+		}
 		else {
 			System.err.println("Unknown message type... You fucked up!");
 		}
 
 		return returnMessage;
-	}
-
-	public static Message ReceiveBroadcastStatusFromPeer(Message broadcastReturn) {
-		String ipAddress = broadcastReturn.getIpAddress();
-		int portNumber = broadcastReturn.getPortNumber();
-		PropertiesOfPeer.AddEntryToIPAddrPortNumMappingAlive(ipAddress,
-				portNumber);
-		return null;
 	}
 
 	public static Message GetClosingConnectionMessage() {
