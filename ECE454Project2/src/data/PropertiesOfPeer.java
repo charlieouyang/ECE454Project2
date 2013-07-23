@@ -100,7 +100,7 @@ public class PropertiesOfPeer {
 		peerUp = true;
 	}
 	
-	//Receive status from another peer and update that info
+	//Receive status from another peer and update that info 
 	public static void updateOtherPeersStatus(Message incomingMessageStatusFromAnotherPeer){
 		//Gotta make sure the data object is actually of the status class
 		Status anotherPeerStatus = null;
