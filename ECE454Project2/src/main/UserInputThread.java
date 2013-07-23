@@ -3,6 +3,7 @@ package main;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Map.Entry;
 
 import justen.ReturnCode;
 import client.ConnectionDispatcher;
@@ -62,6 +63,17 @@ public class UserInputThread extends Thread {
 					connection.start();
 					
 					PropertiesOfPeer.addNewDeviceBroadcast(input1 + ":" + input2);
+				}
+				else if (input.equals("retiredevice")){					
+					if (PropertiesOfPeer.peerUp) {
+						PropertiesOfPeer.ipAddrPortNumMappingAll = new ArrayList<Entry>();
+						PropertiesOfPeer.ipAddrPortNumMappingAlive = new ArrayList<Entry>();
+						PropertiesOfPeer.retireDeviceBroadcast(PropertiesOfPeer.ipAddress + ":" + PropertiesOfPeer.portNumber);
+						
+						PropertiesOfPeer.peerUp = false;
+					} else {
+						System.out.println("[** SYSTEM NOTIFICATION **]	System is already shutdown");
+					}
 				}
 				else if (input.equals("open")) {
 					String fileName = scanner.next();

@@ -160,6 +160,15 @@ public class PropertiesOfPeer {
 		}
 	}
 	
+	public static void retireDeviceBroadcast(String device){
+		Iterator<Entry> it = ipAddrPortNumMappingAlive.iterator();
+		while (it.hasNext()) {
+			Entry entry = it.next();
+			Message deleteFileBroadcastMessage = new Message(PropertiesOfPeer.ipAddress, PropertiesOfPeer.portNumber, MESSAGE_TYPE.RETIREDEVICE, device);
+			ClientStateManager.AddNewMessageToQueue((String)entry.getKey() + ":" + Integer.toString((Integer)entry.getValue()), deleteFileBroadcastMessage);
+		}
+	}
+	
 	/*
 	public static void printStatusInformation() {
 		if (currentPeerStatus.fileNameIndexMap.size() == 0) {

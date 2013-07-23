@@ -91,6 +91,13 @@ public class ServerDecipherMessageRepo {
 			ConnectionInstance connection = new ConnectionInstance(hostName, portNumber);
 			connection.start();
 		}
+		else if (type.equals(Message.MESSAGE_TYPE.RETIREDEVICE)) {
+			String deviceName = (String) incomingMessage.getData();
+			String hostName = deviceName.substring(0, deviceName.indexOf(':'));
+			int portNumber = Integer.parseInt(deviceName.substring(deviceName.indexOf(':') + 1, deviceName.length()));
+			
+			PropertiesOfPeer.RemoveEntryFromIPAddrPortNumMappingAlive(hostName, portNumber);
+		}
 		else {
 			System.err.println("Unknown message type... You fucked up!");
 		}
