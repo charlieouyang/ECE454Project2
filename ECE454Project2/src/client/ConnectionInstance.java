@@ -73,7 +73,9 @@ public class ConnectionInstance extends Thread {
 							Message sendingMessage = ClientStateManager.RetrieveMessageForPeer(ipAddress + ":" +  Integer.toString(portNumber));
 							
 							if (sendingMessage.getType() == MESSAGE_TYPE.STATUS_UPDATE){
+								Status brandNewStatus = new Status(PropertiesOfPeer.fileManager);
 								Status status = (Status) sendingMessage.getData();
+								
 								Hashtable<String, ArrayList<Integer>> versionMap = status.fileVersionMap;
 								Hashtable<String, ArrayList<Integer>> tempVersionMap = new Hashtable<String, ArrayList<Integer>>();
 								Iterator<Map.Entry<String, ArrayList<Integer>>> it = versionMap.entrySet().iterator();
@@ -81,7 +83,7 @@ public class ConnectionInstance extends Thread {
 									Map.Entry<String, ArrayList<Integer>> entry = it.next();	
 									tempVersionMap.put(entry.getKey(), entry.getValue());
 								}
-								status.fileVersionMap = tempVersionMap;
+								brandNewStatus.fileVersionMap = tempVersionMap;
 								
 								Hashtable<String, Lock> oldLockMap = status.lockMap;
 								Hashtable<String, Lock> tempLockMap = new Hashtable<String, Lock>();
@@ -90,9 +92,9 @@ public class ConnectionInstance extends Thread {
 									Map.Entry<String, Lock> entry = it2.next();	
 									tempLockMap.put(entry.getKey(), entry.getValue());
 								}
-								status.lockMap = tempLockMap;
+								brandNewStatus.lockMap = tempLockMap;							
 								
-								sendingMessage = new Message(PropertiesOfPeer.ipAddress, PropertiesOfPeer.portNumber, MESSAGE_TYPE.STATUS_UPDATE, status);
+								sendingMessage = new Message(PropertiesOfPeer.ipAddress, PropertiesOfPeer.portNumber, MESSAGE_TYPE.STATUS_UPDATE, brandNewStatus);
 							}
 														
 							oos.writeObject(sendingMessage);

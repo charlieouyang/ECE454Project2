@@ -27,7 +27,7 @@ public class FileOperations
 		int versionNumber = Integer.parseInt(vNum);
 		
 		if (!fm.containsFileLocally(fileName)) {
-			if (operation == 'w' && (otherDeviceHasReadLock(fileName) || !otherDeviceHasWriteLock(fileName)))
+			if (operation == 'w' && (otherDeviceHasReadLock(fileName) || otherDeviceHasWriteLock(fileName)))
 				return ReturnCode.OTHER_DEVICE_HAS_LOCK; // prevents downloading file if other device has lock
 			
 			if (operation == 'r' && otherDeviceHasWriteLock(fileName))
