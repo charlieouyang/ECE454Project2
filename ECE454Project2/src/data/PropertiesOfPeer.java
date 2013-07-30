@@ -16,7 +16,7 @@ import justen.Status;
 public class PropertiesOfPeer {
 	//Global variables for the file server and client to access
 	public static String ipAddress = "localhost";
-	public static int portNumber = 2000;			//Port number of this host
+	public static int portNumber = 1000;			//Port number of this host
 	public static String PeerName = ipAddress + ":" + portNumber;
 	public static String folderPeerName = ipAddress + "." + portNumber;
 	public static boolean peerUp = false;
@@ -32,7 +32,7 @@ public class PropertiesOfPeer {
 	
 	public PropertiesOfPeer(){
 		//List of ip address to port number mappings
-		Map.Entry<String, Integer> entry1 = new MyEntry<String, Integer>("localhost", 1000);
+		Map.Entry<String, Integer> entry1 = new MyEntry<String, Integer>("localhost", 2000);
 		ipAddrPortNumMappingAll.add(entry1);
 		
 		InitializeDeviceAndStatusMap();
